@@ -62,14 +62,14 @@ table tag
 
 Seems like we could put date and date range in this table, but then date would not be universal to all tables.
 
-| id | thing_fk | tag_fk | numeric | unit  | value       | note                 |
-|----+----------+--------+---------+-------+-------------+----------------------|
-| 21 |       17 |     10 |         |       |             | generic tool         |
-| 22 |       18 |     20 |         |       | Daisy       | the actual dog Daisy |
-| 26 |       18 |     20 |         |       | Little Poo  | alt name             |
-| 23 |       19 |     14 |         |       |             |                      |
-| 24 |       19 |     20 |         |       | Opportunity |                      |
-| 25 |       19 |      5 |       1 | meter |             |                      |
+| id | item_fk | vocab_fk | numeric | unit  | value       | note                 |
+|----+---------+----------+---------+-------+-------------+----------------------|
+| 21 |      17 |       10 |         |       |             | generic tool         |
+| 22 |      18 |       20 |         |       | Daisy       | the actual dog Daisy |
+| 26 |      18 |       20 |         |       | Little Poo  | alt name             |
+| 23 |      19 |       14 |         |       |             |                      |
+| 24 |      19 |       20 |         |       | Opportunity |                      |
+| 25 |      19 |        5 |       1 | meter |             |                      |
 
 
 a peer

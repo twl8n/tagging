@@ -6,6 +6,53 @@
       <pre>[% msg %]</pre>
       <br>
       <table border="1" width="100%">
+        <tr><td bgcolor="#aa8888" colspan="7" align="center">tag</td></tr>
+        <tr bgcolor='#DDDDDD'>
+          <td>id</td>
+          <td>item_fk</td>
+          <td>vocab_fk</td>
+          <td>numeric</td>
+          <td>unit</td>
+          <td>value</td>
+          <td>note</td>
+        </tr>
+        [% foreach rec in tagged_thing_list %]
+        <tr>
+          <td>[% rec.id %] 
+            <form action="cgi_demo_v4.pl" method="get">
+              <input type="hidden" name="id" value="[% rec.id %]">
+              <input type="submit" name="button_edit_tag" value="Edit">
+            </form>
+          </td>
+          <td>[% rec.item_fk %] ([%rec.item_name %])</td>
+          <td>[% rec.vocab_fk %] ([% rec.vocab_name %])</td>
+          <td>[% rec.numeric %]</td>
+          <td>[% rec.unit %]</td>
+          <td>[% rec.value %]</td>
+          <td>[% rec.note %]</td>
+        </tr>
+        [% end %]
+      </table>
+      <form action="cgi_demo_v4.pl" method="get">
+        thing: <input type="text" name="thing">
+        has <select name="tag">
+          [% foreach tag in tag_id_list %]
+          <option value="[% tag.id %]">[% tag.term %]</option>
+          [% end %]
+        </select>
+        numeric: <input type="text" name="numeric">
+        &nbsp;
+        unit: <input type="text" name="unit">
+        &nbsp;
+        value: <input type="text" name="value">
+        &nbsp;
+        note: <input type="text" name="note">
+        &nbsp;
+        <input type="submit" name="button_tag_add" value="Tag item">
+      </form>
+      <hr>
+      <table border="1" width="100%">
+        <tr><td bgcolor="#aa8888" colspan="3" align="center">vocab</td></tr>
         <tr bgcolor='#DDDDDD'>
           <td>id</td><td>term</td><td>type</td>
         </tr>
@@ -16,13 +63,13 @@
         [% end %]
       </table>
       <form action="cgi_demo_v4.pl" method="get">
-        <select name="type">
+        type: <select name="type">
         [% foreach type in type_list %]
         <option value="[% type.id %]">[% type.term %]</option>
         [% end %]
         </select>
         &nbsp;
-        <input type="text" name="term">
+        term: <input type="text" name="term">
         &nbsp;
         <input type="submit" name="button_vocab_add" value="Add">
       </form>
@@ -31,6 +78,7 @@
       </form>
       <hr>
       <table border="1" width="100%">
+        <tr><td bgcolor="#aa8888" colspan="3" align="center">things</td></tr>
         <tr bgcolor='#DDDDDD'>
           <td>id</td><td>term</td><td>type</td>
         </tr>
@@ -41,7 +89,7 @@
         [% end %]
       </table>
       <form action="cgi_demo_v4.pl" method="get">
-        <input type="text" name="name"> <input type="text" name="note"> <input type="submit" name="button_new_thing" value="New thing">
+        name: <input type="text" name="name"> note: <input type="text" name="note"> <input type="submit" name="button_new_thing" value="New thing">
       </form>
     </div>
   </body>

@@ -323,6 +323,27 @@ sub sql_prototype
     return @records;
 }
 
+# Select tagged things
+sub sql_select_tagged_thing
+{
+    my $sql="
+    select *,(select term from vocab where tag.vocab_fk=vocab.id) as vocab_name,
+    (select name from item where tag.item_fk=item.id) as item_name
+    from tag order by item_fk";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute();
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my @records;
+    while(my $hr = $sth->fetchrow_hashref())
+    {
+	push(@records, $hr);
+    }
+    return @records;
+}
+
 sub sql_select_thing
 {
     my $sql="select * from item order by name";
@@ -351,6 +372,85 @@ sub sql_add_thing
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
 
     $sth->execute($name, $note);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+    
+    commit_handle($db_name);
+}
+
+sub sql_select_thing_id
+{
+    my $thing = $_[0];
+    my $sql="select id from item where name=?";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($thing);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my $hr = $sth->fetchrow_hashref();
+    return $hr->{id};
+}
+
+# Take optional arg as the vocab_fk and if set and if it matches an id, set the key 'selected' to 'selected'.
+# Kind of icky to have what is an HTML attribute deep in the SQL code, but this is a convenient place for it.
+# Convenient place to add columns that appear in the output.
+sub sql_select_tag
+{
+    my $vocab_fk = $_[0];
+    my $sql="select * from vocab where type=(select id from vocab where term='tag') order by term";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute();
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my @records;
+    while(my $hr = $sth->fetchrow_hashref())
+    {
+        $hr->{selected} = '';
+        if ($vocab_fk && $hr->{id} == $vocab_fk)
+        {
+            $hr->{selected} = 'selected';
+        }
+	push(@records, $hr);
+    }
+    return @records;
+}
+
+sub sql_select_vocab_id
+{
+    my $term = $_[0];
+    my $sql="select id from vocab where term=?";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($term);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my $hr = $sth->fetchrow_hashref();
+    return $hr->{id};
+}
+
+
+sub sql_add_tag
+{
+    my %arg = @_;
+    my $vocab_fk =$arg{tag};
+    my $thing = $arg{thing};
+    my $numeric = $arg{numeric};
+    my $unit = $arg{unit};
+    my $value = $arg{value};
+    my $note = $arg{note};
+                
+    my $item_fk = sql_select_thing_id($thing);
+
+    msg("item_fk: $item_fk vocab_fk: $vocab_fk<br>");
+    
+    my $sql = "insert into tag (item_fk, vocab_fk, numeric, unit, value, note) values (?,?,?,?,?,?)";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($item_fk, $vocab_fk, $numeric, $unit, $value, $note);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
     
     commit_handle($db_name);
@@ -386,6 +486,16 @@ sub add_type
     sql_add_type(type => $ch{type});
 }
 
+sub add_tag
+{
+    sql_add_tag(tag => $ch{tag},
+                thing => $ch{thing},
+                numeric => $ch{numeric},
+                unit => $ch{unit},
+                value => $ch{value},
+                note => $ch{note});
+}
+
 sub add_thing
 {
     sql_add_thing(name => $ch{name}, note => $ch{name});
@@ -409,6 +519,15 @@ sub button_new_thing
     return 0;
 }
 
+sub button_tag_add
+{
+    if (exists($ch{button_tag_add}))
+    {
+        return 1;
+    }
+    return 0;
+}
+
 sub button_vocab_add
 {
     if (exists($ch{button_vocab_add}))
@@ -424,6 +543,75 @@ sub add_vocab
     sql_add_vocab(term => $ch{term}, type =>$ch{type});
 }
 
+
+# Select a single tag record
+sub sql_select_tag_record
+{
+    my $tag_id = $_[0];
+    my $sql="
+    select *,(select term from vocab where tag.vocab_fk=vocab.id) as vocab_name,
+    (select name from item where tag.item_fk=item.id) as item_name
+    from tag where id=?";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($tag_id);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my $hr = $sth->fetchrow_hashref();
+    return $hr;
+}
+
+sub render_tag_edit
+{
+    $msg .= Dumper(\%ch);
+    # $tagged_record is a hashref
+    my $tagged_record = sql_select_tag_record($ch{id});
+
+    #
+    # Need to add key 'selected' for the selected tag id
+    #
+    my @tag_id_list = sql_select_tag($tagged_record->{vocab_fk});
+
+
+    # A hash reference. These are template variables.
+    # Lists (and hashes?) as references.
+    # Scalars as simply vars (not references).
+    my $vars =
+    {
+     tag_id_list => \@tag_id_list,
+     rec => $tagged_record,
+     msg => $msg
+    };
+
+    my $config = {
+                  TRIM => 1,            # trim leading and trailing whitespace
+                  INCLUDE_PATH => './', # or list ref
+                  INTERPOLATE  => 0,    # expand "$var" in plain text
+                  POST_CHOMP   => 0,    # do not cleanup whitespace
+                  PRE_PROCESS  => '',   # prefix each template
+                  EVAL_PERL    => 0,    # evaluate Perl code blocks
+                  ANYCASE => 1,         # Allow directive keywords in lower case (default: 0 - UPPER only)
+                  ENCODING => 'utf8'    # Force utf8 encoding
+                 };
+
+    # create Template object
+    my $template = Template->new($config);
+
+    # specify input filename, or file handle, text reference, etc.
+    my $input = 'edit_tag.html';
+
+    # process input template, substituting variables
+    # http://search.cpan.org/~abw/Template-Toolkit-2.26/lib/Template.pm#process%28$template,_\%vars,_$output,_%options%29
+    # Third arg can be a GLOB ready for output.
+    # $template->process($input, $vars, $out) || die $template->error();
+
+    print "Content-type: text/html\n\n";
+    $template->process($input, $vars) || die $template->error();
+    #close($out);
+
+}
+
 sub render
 {
     # my ($args) = @_;
@@ -432,6 +620,8 @@ sub render
     my @vocab = sql_select_vocab();
     my @term_list = sql_select_core();
     my @thing_list = sql_select_thing();
+    my @tag_id_list = sql_select_tag();
+    my @tagged_thing_list = sql_select_tagged_thing();
 
     # A hash reference. These are template variables.
     # Lists (and hashes?) as references.
@@ -441,6 +631,8 @@ sub render
      vocab => \@vocab,
      type_list => \@term_list,
      thing_list => \@thing_list,
+     tagged_thing_list => \@tagged_thing_list,
+     tag_id_list => \@tag_id_list,
      msg => $msg
     };
 
@@ -540,7 +732,13 @@ sub dispatch
     my $hr = $_[0];
     my $key = $_[1];
 
-    my %funcs = ('button_new_thing' => \&button_new_thing,
+    my %funcs = ('button_edit_tag' => sub { return exists($ch{button_edit_tag}); },
+                 'button_tag_save' => sub { return exists($ch{button_tag_save}); },
+                 'render_tag_edit' => \&render_tag_edit,
+                 'save_tag' => \&save_tag,
+                 'button_tag_add' => \&button_tag_add,
+                 'add_tag' => \&add_tag,
+                 'button_new_thing' => \&button_new_thing,
                  'add_thing' => \&add_thing,
                  'button_vocab_add' => \&button_vocab_add,
                  'button_new_type' => \&button_new_type,
