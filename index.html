@@ -1,0 +1,48 @@
+<html>
+  <head><title>Demo</title></head>
+  <body style="font-family:arial;">
+    <a href="cgi_demo_v4.pl">Home</a>
+    <div id="container" style="">
+      <pre>[% msg %]</pre>
+      <br>
+      <table border="1" width="100%">
+        <tr bgcolor='#DDDDDD'>
+          <td>id</td><td>term</td><td>type</td>
+        </tr>
+        [% foreach rec in vocab %]
+        <tr>
+          <td>[% rec.id %]</td><td>[% rec.term %]</td><td>[% rec.type %] ([% rec.type_name %])</td>
+        </tr>
+        [% end %]
+      </table>
+      <form action="cgi_demo_v4.pl" method="get">
+        <select name="type">
+        [% foreach type in type_list %]
+        <option value="[% type.id %]">[% type.term %]</option>
+        [% end %]
+        </select>
+        &nbsp;
+        <input type="text" name="term">
+        &nbsp;
+        <input type="submit" name="button_vocab_add" value="Add">
+      </form>
+      <form action="cgi_demo_v4.pl" method="get">
+        <input type="text" name="type"> &nbsp; <input type="submit" name="button_new_type" value="New type">
+      </form>
+      <hr>
+      <table border="1" width="100%">
+        <tr bgcolor='#DDDDDD'>
+          <td>id</td><td>term</td><td>type</td>
+        </tr>
+        [% foreach rec in thing_list %]
+        <tr>
+          <td>[% rec.id %]</td><td>[% rec.name %]</td><td>[% rec.note %]</td>
+        </tr>
+        [% end %]
+      </table>
+      <form action="cgi_demo_v4.pl" method="get">
+        <input type="text" name="name"> <input type="text" name="note"> <input type="submit" name="button_new_thing" value="New thing">
+      </form>
+    </div>
+  </body>
+</html>
