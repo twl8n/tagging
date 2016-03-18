@@ -1,0 +1,189 @@
+; -*- mode: org; -*-
+
+
+table vocabulary
+
+| id | tag          | type | notes                           |
+|----+--------------+------+---------------------------------|
+|  1 | core         |    1 |                                 |
+|  2 | language     |    1 |                                 |
+|  3 | tag          |    1 |                                 |
+|  4 | category     |    1 |                                 |
+|  5 | length       |    3 |                                 |
+|  6 | eng          |    2 |                                 |
+|  7 | fre          |    2 |                                 |
+|  8 | ger          |    2 |                                 |
+|  9 | width        |    3 |                                 |
+| 10 | tool         |    4 |                                 |
+| 11 | person       |    4 |                                 |
+| 12 | car          |    4 |                                 |
+| 13 | vehicle      |    4 |                                 |
+| 14 | mars rover   |    4 |                                 |
+| 20 | name         |    3 |                                 |
+| 21 | dimension    |    3 | grouping fk to group.group      |
+| 22 | xlength      |   21 | no!                             |
+| 23 | xwidth       |   21 | no!                             |
+| 24 | xheight      |   21 | no!                             |
+| 25 | xdiagnonal   |   21 | no!                             |
+| 26 | width        |    3 |                                 |
+| 27 | height       |    3 |                                 |
+| 28 | diagonal     |    3 |                                 |
+| 29 | latitide     |    3 | place                           |
+| 30 | longitude    |    3 | place                           |
+| 31 | place_uri    |    3 | place                           |
+| 32 | place_name   |    3 | place                           |
+| 33 | country_code |    3 | place                           |
+| 34 | place        |    1 | core place.type=core.id         |
+| 36 | tabletable   |    1 | tabletable type, for structured |
+
+
+table group, tabletable, ?
+
+| group | member | note         |
+|-------+--------+--------------|
+|    21 |      5 | dim:length   |
+|    21 |     26 | dim:width    |
+|    21 |     27 | dim:height   |
+|    35 |     29 | place:lat    |
+|    35 |     30 | place:lon    |
+|    35 |     31 | place:uri    |
+|    35 |     32 | place:name   |
+|    35 |     33 | place:c_code |
+
+table thing
+
+| id | name  | note                        |
+|----+-------+-----------------------------|
+| 17 | drill | electric drill retail item  |
+| 18 | dog   | a specific companion animal |
+| 19 | rover | a specific mars rover       |
+
+table tag
+
+Seems like we could put date and date range in this table, but then date would not be universal to all tables.
+
+| id | thing_fk | tag_fk | numeric | unit  | value       | note                 |
+|----+----------+--------+---------+-------+-------------+----------------------|
+| 21 |       17 |     10 |         |       |             | generic tool         |
+| 22 |       18 |     20 |         |       | Daisy       | the actual dog Daisy |
+| 26 |       18 |     20 |         |       | Little Poo  | alt name             |
+| 23 |       19 |     14 |         |       |             |                      |
+| 24 |       19 |     20 |         |       | Opportunity |                      |
+| 25 |       19 |      5 |       1 | meter |             |                      |
+
+
+a peer
+t sub
+g tween
+
+2^n+1 chars
+
+a  super ordinate peer
+
+g  sub ordinate peer
+
+tc sub order
+
+? What is the rule for using "t" vs "tc"?
+
+e cap aka tween, >a >c <t <g Use this after creating the data, before sorting. (Or can the list be built with
+  the cap, as long as all insert operations ignore (remove) the cap?)
+
+h  [ct]+ root: >g and <t 
+
+b  [ag]+ root: >a and <c
+
+^b[ag]*(?:h[ct]*b[cg]*)*d$
+
+a
+ \
+  ag
+   |
+  agg -  aggcc -  aggc    -    aggctc   -    aggctt
+               |               \
+             aggca           aggctcc - aggctc - aggct - aggctt
+                                                  \
+                                                 aggcta  
+
+  a
+  |
+  ag
+   |
+  agg - aggcc -  aggc    -    aggctc   -    aggctt
+                  |               |
+                 aggca           aggctcc                                                              + aggctc - aggct - aggctt
+                                   |                                                                               \
+                                 aggctcca - aggctccat - aggctccatt                                                 aggcta  
+                                                |
+                                             aggctccata
+
+  a
+  |
+  ag
+   |
+  agg - aggcc -  aggc    -    aggctc   -    aggctt
+                  |              |
+                 aggca        aggctcc 
+                                   |
+                                 aggctcca - aggctccat - aggctccatt
+                                                |
+                                             aggctccata
+
+
+
+So strings of 't' or 'c', /[ct]+/, refer to an ordered set of subordinate groups to the node referred to by
+cutting the string before the beginning of a ct section, s/[ag]+([ct]+[ag]+){$nn}[ct].*// where $nn =
+{0,1,2..} refers to the number of intervening hierarchies in the system. 
+
+left: c
+right: t
+
+(Editied for 'c' first.) All subordinate groups start with member 'c' and each subsequent member is placed into the tree by building a
+unique string according to the rule first=='c' second=='t' (where first is the parent entity, or more important)
+
+This gets complicated with peer groups at multiple hierarchical levels but for simple examples I think it aids
+clarity.
+
+Explain: ... also [ag]+ strings must start with 'g', same reason.
+
+Also I would say capped sorted and imputed
+ad
+	agd
+	aggd
+	aggtcd
+	aggtd
+
+
+ad
+agd
+aggd
+aggtcd
+aggtd
+
+
+
+
+
+table hierarchy_sort
+fkid=vocabulary.id
+group uses same id sequence as all record ids
+
+| fkid | key   | group | note                                           |
+|------+-------+-------+------------------------------------------------|
+|   11 | ata   |    15 | car is a type of vehicle                       |
+|   12 | a     |    15 | vehicle is root                                |
+|   13 | ataa  |    15 | rover is a type of vehicle and sorts after car |
+|   11 | ata   |    16 | car is a type of vehicle                       |
+|   12 | a     |    16 | vehicle is root                                |
+|   13 | atata |    16 | mars rover is a type of car                    |
+
+date_link
+fk=hierarchy.group
+fk=tag.id
+
+| fk | from | to      |                                    |
+|----+------+---------+------------------------------------|
+| 15 | 1999 | 2010    | older hierarchy                    |
+| 16 | 2010 | present | newer hierarchy                    |
+| 22 | 2003 | present | Daisy named this since birth       |
+| 26 | 2015 | present | Daisy new alt name since last year |
