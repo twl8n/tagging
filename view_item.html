@@ -1,0 +1,26 @@
+<html>
+  <head><title>Demo</title></head>
+  <body style="font-family:arial;">
+    <a href="cgi_demo_v4.pl">Home</a>
+    <div id="container" style="">
+      <pre>[% msg %]</pre>
+      <br>
+      <form action="cgi_demo_v4.pl" method="get">
+        <input type="hidden" name="id" value="[% item.id %]">
+        term: [% item.term %] type [% item.type %]
+        <br>
+        [% foreach tag in tag_id_list %]
+        [% tag.id %] ([% tag.term %]
+        numeric: [% rec.numeric %]
+        &nbsp;
+        unit: [% rec.unit %]
+        &nbsp;
+        value: [% rec.value %]
+        &nbsp;
+        note: [% rec.note %]
+        &nbsp;
+        [% end %]
+      </form>
+    </div>
+  </body>
+</html>
