@@ -6,7 +6,8 @@
       <pre>[% msg %]</pre>
       <br>
       <form action="cgi_demo_v4.pl" method="get">
-        thing: [% rec.item_name %] <input type="hidden" name="thing" value="[% rec.id %]">
+        <input type="hidden" name="id" value="[% rec.id %]">
+        thing: [% rec.item_name %] <input type="hidden" name="item_fk" value="[% rec.item_fk %]">
         has <select name="tag">
           [% foreach tag in tag_id_list %]
           <option value="[% tag.id %]" [% tag.selected %]>[% tag.term %]</option>

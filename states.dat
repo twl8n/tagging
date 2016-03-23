@@ -1,14 +1,14 @@
-| state-edge    | test             | func-dispatch   | next-state-edge |
-|---------------+------------------+-----------------+-----------------|
-| start         | button_vocab_add | add_vocab       | render          |
-| start         | button_new_type  | add_type        | render          |
-| start         | button_new_thing | add_thing       | render          |
-| start         | button_tag_add   | add_tag         | render          |
-| start         | button_edit_tag  | render_tag_edit | wait            |
-| start         | button_tag_save  | save_tag        | wait            |
-| start         |                  |                 | render          |
-| render        |                  | render          | wait            |
-| wait          |                  | wait            |                 |
+| state-edge | test              | func-dispatch   | next-state-edge |
+|------------+-------------------+-----------------+-----------------|
+| start      | button_vocab_add  | add_vocab       | render          |
+| start      | button_new_type   | add_type        | render          |
+| start      | button_new_thing  | add_thing       | render          |
+| start      | button_tag_add    | add_tag         | render          |
+| start      | button_edit_tag   | render_tag_edit | wait            |
+| start      | button_tag_update | save_tag        | render          |
+| start      |                   |                 | render          |
+| render     |                   | render          | wait            |
+| wait       |                   | wait            |                 |
 
 # Tests in a separate column. Empty test column is always true. Empty function-dispatch is null/no-op.
 

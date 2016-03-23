@@ -78,13 +78,25 @@
       </form>
       <hr>
       <table border="1" width="100%">
-        <tr><td bgcolor="#aa8888" colspan="3" align="center">things</td></tr>
+        <tr><td bgcolor="#aa8888" colspan="4" align="center">thing (table item)</td></tr>
         <tr bgcolor='#DDDDDD'>
-          <td>id</td><td>term</td><td>type</td>
+          <td>
+            &nbsp;
+          </td>
+          <td>id</td>
+          <td>term</td>
+          <td>type</td>
         </tr>
         [% foreach rec in thing_list %]
         <tr>
-          <td>[% rec.id %]</td><td>[% rec.name %]</td><td>[% rec.note %]</td>
+          <td valign="top" width="105em">
+            <form action="cgi_demo_v4.pl" method="get">
+              <input type="hidden" name="id" value="[% rec.id %]">
+              <input type="submit" name="button_view_item" value="View">
+              <input type="submit" name="button_edit_item" value="Edit">
+            </form>
+          </td>
+          <td valign="top">[% rec.id %]</td><td valign="top">[% rec.name %]</td><td valign="top">[% rec.note %]</td>
         </tr>
         [% end %]
       </table>

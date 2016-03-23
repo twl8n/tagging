@@ -543,6 +543,44 @@ sub add_vocab
     sql_add_vocab(term => $ch{term}, type =>$ch{type});
 }
 
+sub save_tag
+{
+    msg("save_tag called<br>");
+    sql_update_tag_record(id => $ch{id},
+                          item_fk => $ch{item_fk},
+                          vocab_fk => $ch{tag},
+                          numeric => $ch{numeric},
+                          name => $ch{name},
+                          unit => $ch{unit},
+                          value => $ch{value},
+                          note => $ch{note});
+                          
+}
+
+# update a single tagged record
+sub sql_update_tag_record
+{
+    my %arg = @_;
+    # my $term = $arg{term};
+    # my $type = $arg{type};
+
+    my $tag_id = $_[0];
+    my $sql="
+    update tag set item_fk=?, vocab_fk=?, numeric=?, unit=?, value=?, note=? where id=?";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($arg{item_fk},
+                  $arg{vocab_fk},
+                  $arg{numeric},
+                  $arg{unit},
+                  $arg{value},
+                  $arg{note},
+                  $arg{id});
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+    commit_handle($db_name);
+}
+
 
 # Select a single tag record
 sub sql_select_tag_record
@@ -733,7 +771,7 @@ sub dispatch
     my $key = $_[1];
 
     my %funcs = ('button_edit_tag' => sub { return exists($ch{button_edit_tag}); },
-                 'button_tag_save' => sub { return exists($ch{button_tag_save}); },
+                 'button_tag_update' => sub {  return exists($ch{button_tag_update}); },
                  'render_tag_edit' => \&render_tag_edit,
                  'save_tag' => \&save_tag,
                  'button_tag_add' => \&button_tag_add,
