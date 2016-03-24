@@ -41,4 +41,11 @@ AddHandler cgi-script .pl
 DirectoryIndex index.pl index.html
 ```
 
+### Conceptual demo
+
+See demo.txt for some examples of how the internals evolved. It includes a section about creating imputed data
+structures via Church encoding, and some commentary about table tabletable. tabletable is the structure of the
+tags, analogous to an ontology. You can read the encoded structure, maybe, but best to let software handle
+that. The code isn't ready for that, but we did it before in Deft with keystr, dcc (declare control column),
+desc (declare explicit structure column) and the concept is the same here. See runtlib.pl in the Deft repo.
 
