@@ -7,19 +7,30 @@
       <br>
       <form action="cgi_demo_v4.pl" method="get">
         <input type="hidden" name="id" value="[% item.id %]">
-        term: [% item.term %] type [% item.type %]
         <br>
-        [% foreach tag in tag_id_list %]
-        [% tag.id %] ([% tag.term %]
-        numeric: [% rec.numeric %]
-        &nbsp;
-        unit: [% rec.unit %]
-        &nbsp;
-        value: [% rec.value %]
-        &nbsp;
-        note: [% rec.note %]
-        &nbsp;
+      <table border="1" width="50%">
+        <tr>
+          <td bgcolor="#aa8888" colspan="7" align="center">
+            name: [% rec.name %] note [% rec.note %] id: [% rec.id %]
+          </td>
+        </tr>
+        <tr bgcolor='#DDDDDD'>
+          <td>vocab_fk</td>
+          <td>numeric</td>
+          <td>unit</td>
+          <td>value</td>
+          <td>note</td>
+        </tr>
+        [% foreach rec in tag_id_list %]
+        <tr>
+          <td>[% rec.vocab_fk %] ([% rec.vocab_name %])</td>
+          <td>[% rec.numeric %]</td>
+          <td>[% rec.unit %]</td>
+          <td>[% rec.value %]</td>
+          <td>[% rec.note %]</td>
+        </tr>
         [% end %]
+      </table>
       </form>
     </div>
   </body>

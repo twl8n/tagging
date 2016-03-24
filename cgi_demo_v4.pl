@@ -60,7 +60,7 @@ sub main
     # $dbh = get_db_handle($db_name);
     $dbh = sqlite_db_handle($db_name);
 
-    $msg =  Dumper($dbh);
+    # $msg =  Dumper($dbh);
 
     my $temp;
 

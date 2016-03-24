@@ -11,6 +11,17 @@ our $dbh;
 
 my $verbose = 0;
 
+my $config = {
+              TRIM => 1,            # trim leading and trailing whitespace
+              INCLUDE_PATH => './', # or list ref
+              INTERPOLATE  => 0,    # expand "$var" in plain text
+              POST_CHOMP   => 0,    # do not cleanup whitespace
+              PRE_PROCESS  => '',   # prefix each template
+              EVAL_PERL    => 0,    # evaluate Perl code blocks
+              ANYCASE => 1,         # Allow directive keywords in lower case (default: 0 - UPPER only)
+              ENCODING => 'utf8'    # Force utf8 encoding
+             };
+
 # require this file to get the standard functions for the work flow engine. 
 
 sub draw_home
@@ -301,7 +312,7 @@ sub sql_add_vocab
     commit_handle($db_name);
 }
 
-sub sql_prototype
+sub sql_select_prototype
 {
     my %arg = @_;
     my $db_name = $arg{db_name};
@@ -342,6 +353,23 @@ sub sql_select_tagged_thing
 	push(@records, $hr);
     }
     return @records;
+}
+
+# Select a single item by id.
+# Use when viewing or editing an item.
+sub sql_select_item_info
+{
+    my $id = $_[0];
+    my $sql="select * from item where id=?";
+
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($id);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my $hr = $sth->fetchrow_hashref();
+    return $hr;
 }
 
 sub sql_select_thing
@@ -581,6 +609,28 @@ sub sql_update_tag_record
     commit_handle($db_name);
 }
 
+# Select all the tags for a given item by item.id=tag.item_fk 
+sub sql_select_tag_list
+{
+    my $item_fk = $_[0];
+    my $sql="
+    select *,(select term from vocab where tag.vocab_fk=vocab.id) as vocab_name,
+    (select name from item where tag.item_fk=item.id) as item_name
+    from tag where item_fk=?";
+    my $sth = $dbh->prepare($sql);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    $sth->execute($item_fk);
+    err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
+
+    my @records;
+    while(my $hr = $sth->fetchrow_hashref())
+    {
+        push(@records, $hr);
+    }
+    return @records;
+}
+
 
 # Select a single tag record
 sub sql_select_tag_record
@@ -600,6 +650,44 @@ sub sql_select_tag_record
     return $hr;
 }
 
+sub render_item_info
+{
+    # $msg .= Dumper(\%ch);
+
+    # $tagged_record is a hashref for a single record
+    my $tagged_record = sql_select_item_info($ch{id});
+
+    # my @tag_id_list = sql_select_tag($tagged_record->{vocab_fk});
+    my @tag_id_list = sql_select_tag_list($tagged_record->{id});
+    # msg(Dumper(\@tag_id_list));
+
+    # A hash reference. These are template variables.
+    # Lists (and hashes?) as references.
+    # Scalars as simply vars (not references).
+    my $vars =
+    {
+     tag_id_list => \@tag_id_list,
+     rec => $tagged_record,
+     msg => $msg
+    };
+
+    # create Template object
+    my $template = Template->new($config);
+
+    # specify input filename, or file handle, text reference, etc.
+    my $input = 'view_item.html';
+
+    # process input template, substituting variables
+    # http://search.cpan.org/~abw/Template-Toolkit-2.26/lib/Template.pm#process%28$template,_\%vars,_$output,_%options%29
+    # Third arg can be a GLOB ready for output.
+    # $template->process($input, $vars, $out) || die $template->error();
+
+    print "Content-type: text/html\n\n";
+    $template->process($input, $vars) || die $template->error();
+    #close($out);
+
+}
+
 sub render_tag_edit
 {
     $msg .= Dumper(\%ch);
@@ -607,7 +695,7 @@ sub render_tag_edit
     my $tagged_record = sql_select_tag_record($ch{id});
 
     #
-    # Need to add key 'selected' for the selected tag id
+    # (What?) Need to add key 'selected' for the selected tag id
     #
     my @tag_id_list = sql_select_tag($tagged_record->{vocab_fk});
 
@@ -621,17 +709,6 @@ sub render_tag_edit
      rec => $tagged_record,
      msg => $msg
     };
-
-    my $config = {
-                  TRIM => 1,            # trim leading and trailing whitespace
-                  INCLUDE_PATH => './', # or list ref
-                  INTERPOLATE  => 0,    # expand "$var" in plain text
-                  POST_CHOMP   => 0,    # do not cleanup whitespace
-                  PRE_PROCESS  => '',   # prefix each template
-                  EVAL_PERL    => 0,    # evaluate Perl code blocks
-                  ANYCASE => 1,         # Allow directive keywords in lower case (default: 0 - UPPER only)
-                  ENCODING => 'utf8'    # Force utf8 encoding
-                 };
 
     # create Template object
     my $template = Template->new($config);
@@ -673,17 +750,6 @@ sub render
      tag_id_list => \@tag_id_list,
      msg => $msg
     };
-
-    my $config = {
-                  TRIM => 1,            # trim leading and trailing whitespace
-                  INCLUDE_PATH => './', # or list ref
-                  INTERPOLATE  => 0,    # expand "$var" in plain text
-                  POST_CHOMP   => 0,    # do not cleanup whitespace
-                  PRE_PROCESS  => '',   # prefix each template
-                  EVAL_PERL    => 0,    # evaluate Perl code blocks
-                  ANYCASE => 1,         # Allow directive keywords in lower case (default: 0 - UPPER only)
-                  ENCODING => 'utf8'    # Force utf8 encoding
-                 };
 
     # create Template object
     my $template = Template->new($config);
@@ -770,8 +836,11 @@ sub dispatch
     my $hr = $_[0];
     my $key = $_[1];
 
-    my %funcs = ('button_edit_tag' => sub { return exists($ch{button_edit_tag}); },
+    my %funcs = ('button_view_item' => sub { return exists($ch{button_view_item}); },
+                 'button_edit_item' => sub { return exists($ch{button_edi_item}); },
+                 'button_edit_tag' => sub { return exists($ch{button_edit_tag}); },
                  'button_tag_update' => sub {  return exists($ch{button_tag_update}); },
+                 'render_item_info' => \&render_item_info,
                  'render_tag_edit' => \&render_tag_edit,
                  'save_tag' => \&save_tag,
                  'button_tag_add' => \&button_tag_add,
