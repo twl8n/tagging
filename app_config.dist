@@ -4,5 +4,5 @@ log_file = /tmp/error.txt
 default_db = tag.db
 
 # 
-# alias db_name                         dbms      db_host   db_port  db_user
-tag  =  /Users/twl/Sites/tagging/tag.db SQLite
+# alias db_name                           dbms      db_host   db_port  db_user
+tag  =  /Users/mst3k/Sites/tagging/tag.db SQLite
