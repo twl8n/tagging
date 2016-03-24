@@ -18,7 +18,7 @@ app_config.dist to .app_config and edit for the location of the database file. I
 schema.sql. Apple Mac OS X users may need to set some "interesting" permissions so that the web server has
 permission to use the scripts and database. I had to add myself to group _www, then
 
-`
+```
 chmod g+w .
 chmod g+w tag.db
-`
+```
