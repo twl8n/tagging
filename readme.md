@@ -22,3 +22,23 @@ permission to use the scripts and database. I had to add myself to group _www, t
 chmod g+w .
 chmod g+w tag.db
 ```
+
+On right-thinking systems with suexec and Apache UserDir and mod_userdir enabled, none of that is necessary if
+you install in your public_html directory.
+
+Once installed the URL is something like:
+
+`
+http://localhost/~mst3k/tagging/index.pl
+`
+
+My minimal .htaccess usually looks like:
+
+```
+Options ExecCGI Indexes FollowSymLinks
+AddHandler cgi-script .pl
+
+DirectoryIndex index.pl index.html
+```
+
+
