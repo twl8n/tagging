@@ -15,7 +15,7 @@
           </td>
         </tr>
         <tr bgcolor='#DDDDDD'>
-          <td>vocab_fk</td>
+          <td>vocab name (vocab_fk)</td>
           <td>numeric</td>
           <td>unit</td>
           <td>value</td>
@@ -23,7 +23,7 @@
         </tr>
         [% foreach rec in tag_id_list %]
         <tr>
-          <td>[% rec.vocab_fk %] ([% rec.vocab_name %])</td>
+          <td>[% rec.vocab_name %] ([% rec.vocab_fk %])</td>
           <td>[% rec.numeric %]</td>
           <td>[% rec.unit %]</td>
           <td>[% rec.value %]</td>

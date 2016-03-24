@@ -459,7 +459,7 @@ sub sql_select_vocab_id
     return $hr->{id};
 }
 
-
+# Thing is the item.term aka item name
 sub sql_add_tag
 {
     my %arg = @_;
