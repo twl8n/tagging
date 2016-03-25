@@ -374,7 +374,7 @@ sub sql_select_item_info
 
 sub sql_select_thing
 {
-    my $sql="select * from item order by name";
+    my $sql="select * from item order by lower(name)";
     my $sth = $dbh->prepare($sql);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
 
@@ -469,10 +469,21 @@ sub sql_add_tag
     my $unit = $arg{unit};
     my $value = $arg{value};
     my $note = $arg{note};
-                
-    my $item_fk = sql_select_thing_id($thing);
+    my $item_fk = $arg{item_fk};
 
-    msg("item_fk: $item_fk vocab_fk: $vocab_fk<br>");
+    if (! $item_fk)
+    {
+        if ($thing)
+        {
+            $item_fk = sql_select_thing_id($thing);
+        }
+        else
+        {
+            msg("Cannot add a tag, no item_fk and no thing<br>");
+            return;
+        }
+    }
+    # msg("item_fk: $item_fk vocab_fk: $vocab_fk<br>");
     
     my $sql = "insert into tag (item_fk, vocab_fk, numeric, unit, value, note) values (?,?,?,?,?,?)";
     my $sth = $dbh->prepare($sql);
@@ -516,7 +527,8 @@ sub add_type
 
 sub add_tag
 {
-    sql_add_tag(tag => $ch{tag},
+    sql_add_tag(item_fk => $ch{item_fk},
+                tag => $ch{tag},
                 thing => $ch{thing},
                 numeric => $ch{numeric},
                 unit => $ch{unit},

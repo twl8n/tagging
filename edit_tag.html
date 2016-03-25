@@ -1,11 +1,11 @@
 <html>
   <head><title>Demo</title></head>
   <body style="font-family:arial;">
-    <a href="cgi_demo_v4.pl">Home</a>
+    <a href="index.pl">Home</a>
     <div id="container" style="">
       <pre>[% msg %]</pre>
       <br>
-      <form action="cgi_demo_v4.pl" method="get">
+      <form action="index.pl" method="get">
         <input type="hidden" name="id" value="[% rec.id %]">
         thing: [% rec.item_name %] <input type="hidden" name="item_fk" value="[% rec.item_fk %]">
         has <select name="tag">

@@ -1,7 +1,7 @@
 <html>
   <head><title>Demo</title></head>
   <body style="font-family:arial;">
-    <a href="cgi_demo_v4.pl">Home</a>
+    <a href="index.pl">Home</a>
     <div id="container" style="">
       <pre>[% msg %]</pre>
       <br>
@@ -18,23 +18,29 @@
         </tr>
         [% foreach rec in tagged_thing_list %]
         <tr>
-          <td>[% rec.id %] 
-            <form action="cgi_demo_v4.pl" method="get">
+          <td  valign="top">
+            <form action="index.pl" method="get">
+              [% rec.id %] 
               <input type="hidden" name="id" value="[% rec.id %]">
               <input type="submit" name="button_edit_tag" value="Edit">
             </form>
           </td>
-          <td>[% rec.item_fk %] ([%rec.item_name %])</td>
-          <td>[% rec.vocab_fk %] ([% rec.vocab_name %])</td>
-          <td>[% rec.numeric %]</td>
-          <td>[% rec.unit %]</td>
-          <td>[% rec.value %]</td>
-          <td>[% rec.note %]</td>
+          <td  valign="top">[% rec.item_fk %] ([%rec.item_name %])</td>
+          <td  valign="top">[% rec.vocab_fk %] ([% rec.vocab_name %])</td>
+          <td  valign="top">[% rec.numeric %]</td>
+          <td  valign="top">[% rec.unit %]</td>
+          <td  valign="top">[% rec.value %]</td>
+          <td  valign="top">[% rec.note %]</td>
         </tr>
         [% end %]
       </table>
-      <form action="cgi_demo_v4.pl" method="get">
-        thing: <input type="text" name="thing">
+      <form action="index.pl" method="get">
+        thing:
+        <select name="item_fk">
+          [% foreach rec in thing_list %]
+          <option value="[% rec.id %]">[% rec.name %] ([% rec.id %])</option>
+          [% end %]
+        </select>
         has <select name="tag">
           [% foreach tag in tag_id_list %]
           <option value="[% tag.id %]">[% tag.term %]</option>
@@ -45,7 +51,7 @@
         unit: <input type="text" name="unit">
         &nbsp;
         value: <input type="text" name="value">
-        &nbsp;
+        <br>
         note: <input type="text" name="note">
         &nbsp;
         <input type="submit" name="button_tag_add" value="Tag item">
@@ -62,7 +68,7 @@
         </tr>
         [% end %]
       </table>
-      <form action="cgi_demo_v4.pl" method="get">
+      <form action="index.pl" method="get">
         type: <select name="type">
         [% foreach type in type_list %]
         <option value="[% type.id %]">[% type.term %]</option>
@@ -73,7 +79,7 @@
         &nbsp;
         <input type="submit" name="button_vocab_add" value="Add">
       </form>
-      <form action="cgi_demo_v4.pl" method="get">
+      <form action="index.pl" method="get">
         <input type="text" name="type"> &nbsp; <input type="submit" name="button_new_type" value="New type">
       </form>
       <hr>
@@ -90,7 +96,7 @@
         [% foreach rec in thing_list %]
         <tr>
           <td valign="top" width="105em">
-            <form action="cgi_demo_v4.pl" method="get">
+            <form action="index.pl" method="get">
               <input type="hidden" name="id" value="[% rec.id %]">
               <input type="submit" name="button_view_item" value="View">
               <input type="submit" name="button_edit_item" value="Edit">
@@ -100,7 +106,7 @@
         </tr>
         [% end %]
       </table>
-      <form action="cgi_demo_v4.pl" method="get">
+      <form action="index.pl" method="get">
         name: <input type="text" name="name"> note: <input type="text" name="note"> <input type="submit" name="button_new_thing" value="New thing">
       </form>
     </div>
