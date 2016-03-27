@@ -48,12 +48,13 @@ update seq set id=id+1;
 
 create table tag (
         id       integer primary key autoincrement,
-        item_fk  integer, -- fk to item.id
-        vocab_fk integer, -- fk to vocab.id
-        numeric  float,   -- optional numeric value
-        unit     text,    -- optional unit for numeric
-        value    text,    -- optional text value
-        note     text
+        item_fk    integer, -- fk to item.id
+        vocab_fk   integer, -- fk to vocab.id
+        numeric    float,   -- optional numeric value
+        unit       text,    -- optional unit for numeric
+        value      text,    -- optional text value
+        related_fk integer, -- fk to item.id of the related item
+        note       text
 );
 
 -- Tag vocab that applies to a given item type. Linking list category to vocab

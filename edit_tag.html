@@ -13,6 +13,14 @@
           <option value="[% tag.id %]" [% tag.selected %]>[% tag.term %]</option>
           [% end %]
         </select>
+        other:
+        <select name="related_fk">
+          [% foreach rec in thing_list %]
+          <option value="[% rec.id %]">[% rec.name %] ([% rec.id %])</option>
+          [% end %]
+        </select>
+        <input type="submit" name="button_tag_update" value="Save tag info">
+        <br>
         numeric: <input type="text" name="numeric" value="[% rec.numeric %]">
         &nbsp;
         unit: <input type="text" name="unit" value="[% rec.unit %]">
@@ -21,7 +29,6 @@
         &nbsp;
         note: <input type="text" name="note" value="[% rec.note %]">
         &nbsp;
-        <input type="submit" name="button_tag_update" value="Save tag info">
       </form>
     </div>
   </body>

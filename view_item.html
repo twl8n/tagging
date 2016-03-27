@@ -19,6 +19,7 @@
           <td>numeric</td>
           <td>unit</td>
           <td>value</td>
+          <td>related item</td>
           <td>note</td>
         </tr>
         [% foreach rec in tag_id_list %]
@@ -27,6 +28,7 @@
           <td>[% rec.numeric %]</td>
           <td>[% rec.unit %]</td>
           <td>[% rec.value %]</td>
+          <td>[% rec.related_name %] ([% rec.related_fk %])</td>
           <td>[% rec.note %]</td>
         </tr>
         [% end %]

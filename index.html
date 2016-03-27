@@ -6,7 +6,7 @@
       <pre>[% msg %]</pre>
       <br>
       <table border="1" width="100%">
-        <tr><td bgcolor="#aa8888" colspan="7" align="center">tag</td></tr>
+        <tr><td bgcolor="#aa8888" colspan="8" align="center">tag</td></tr>
         <tr bgcolor='#DDDDDD'>
           <td>id</td>
           <td>item_fk</td>
@@ -14,6 +14,7 @@
           <td>numeric</td>
           <td>unit</td>
           <td>value</td>
+          <td>related items</td>
           <td>note</td>
         </tr>
         [% foreach rec in tagged_thing_list %]
@@ -30,6 +31,7 @@
           <td  valign="top">[% rec.numeric %]</td>
           <td  valign="top">[% rec.unit %]</td>
           <td  valign="top">[% rec.value %]</td>
+          <td  valign="top">[% rec.related_fk %] ([%rec.related_name %])</td>
           <td  valign="top">[% rec.note %]</td>
         </tr>
         [% end %]
@@ -46,15 +48,21 @@
           <option value="[% tag.id %]">[% tag.term %]</option>
           [% end %]
         </select>
+        note: <input type="text" name="note">
+        &nbsp;
+        <input type="submit" name="button_tag_add" value="Tag item">
+        <br>
         numeric: <input type="text" name="numeric">
         &nbsp;
         unit: <input type="text" name="unit">
         &nbsp;
         value: <input type="text" name="value">
-        <br>
-        note: <input type="text" name="note">
-        &nbsp;
-        <input type="submit" name="button_tag_add" value="Tag item">
+        other:
+        <select name="related_fk">
+          [% foreach rec in thing_list %]
+          <option value="[% rec.id %]">[% rec.name %] ([% rec.id %])</option>
+          [% end %]
+        </select>
       </form>
       <hr>
       <table border="1" width="100%">

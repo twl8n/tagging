@@ -339,7 +339,8 @@ sub sql_select_tagged_thing
 {
     my $sql="
     select *,(select term from vocab where tag.vocab_fk=vocab.id) as vocab_name,
-    (select name from item where tag.item_fk=item.id) as item_name
+    (select name from item where tag.item_fk=item.id) as item_name,
+    (select name from item where tag.related_fk=item.id) as related_name
     from tag order by item_fk";
     my $sth = $dbh->prepare($sql);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
@@ -422,10 +423,13 @@ sub sql_select_thing_id
 # Take optional arg as the vocab_fk and if set and if it matches an id, set the key 'selected' to 'selected'.
 # Kind of icky to have what is an HTML attribute deep in the SQL code, but this is a convenient place for it.
 # Convenient place to add columns that appear in the output.
+
+# Select tags and relations.
+
 sub sql_select_tag
 {
     my $vocab_fk = $_[0];
-    my $sql="select * from vocab where type=(select id from vocab where term='tag') order by term";
+    my $sql="select * from vocab where type in (select id from vocab where term='tag' or term='relation') order by term";
     my $sth = $dbh->prepare($sql);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
 
@@ -470,6 +474,7 @@ sub sql_add_tag
     my $value = $arg{value};
     my $note = $arg{note};
     my $item_fk = $arg{item_fk};
+    my $related_fk = $arg{related_fk};
 
     if (! $item_fk)
     {
@@ -485,11 +490,11 @@ sub sql_add_tag
     }
     # msg("item_fk: $item_fk vocab_fk: $vocab_fk<br>");
     
-    my $sql = "insert into tag (item_fk, vocab_fk, numeric, unit, value, note) values (?,?,?,?,?,?)";
+    my $sql = "insert into tag (item_fk, vocab_fk, numeric, unit, value, note, related_fk) values (?,?,?,?,?,?,?)";
     my $sth = $dbh->prepare($sql);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
 
-    $sth->execute($item_fk, $vocab_fk, $numeric, $unit, $value, $note);
+    $sth->execute($item_fk, $vocab_fk, $numeric, $unit, $value, $note, $related_fk);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
     
     commit_handle($db_name);
@@ -527,7 +532,8 @@ sub add_type
 
 sub add_tag
 {
-    sql_add_tag(item_fk => $ch{item_fk},
+    sql_add_tag(related_fk => $ch{related_fk},
+                item_fk => $ch{item_fk},
                 tag => $ch{tag},
                 thing => $ch{thing},
                 numeric => $ch{numeric},
@@ -627,7 +633,8 @@ sub sql_select_tag_list
     my $item_fk = $_[0];
     my $sql="
     select *,(select term from vocab where tag.vocab_fk=vocab.id) as vocab_name,
-    (select name from item where tag.item_fk=item.id) as item_name
+    (select name from item where tag.item_fk=item.id) as item_name,
+    (select name from item where tag.related_fk=item.id) as related_name
     from tag where item_fk=?";
     my $sth = $dbh->prepare($sql);
     err_stuff($dbh, $sql, "exec", $db_name, (caller(0))[3]);
@@ -668,10 +675,7 @@ sub render_item_info
 
     # $tagged_record is a hashref for a single record
     my $tagged_record = sql_select_item_info($ch{id});
-
-    # my @tag_id_list = sql_select_tag($tagged_record->{vocab_fk});
     my @tag_id_list = sql_select_tag_list($tagged_record->{id});
-    # msg(Dumper(\@tag_id_list));
 
     # A hash reference. These are template variables.
     # Lists (and hashes?) as references.
@@ -710,6 +714,7 @@ sub render_tag_edit
     # (What?) Need to add key 'selected' for the selected tag id
     #
     my @tag_id_list = sql_select_tag($tagged_record->{vocab_fk});
+    my @thing_list = sql_select_thing();
 
 
     # A hash reference. These are template variables.
@@ -717,6 +722,7 @@ sub render_tag_edit
     # Scalars as simply vars (not references).
     my $vars =
     {
+     thing_list => \@thing_list,
      tag_id_list => \@tag_id_list,
      rec => $tagged_record,
      msg => $msg
