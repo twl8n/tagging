@@ -1,56 +1,83 @@
 ; -*- mode: org; -*-
 
+See Documents/tagging.odb
 
 table vocabulary
 
-| id | tag          | type | notes                           |
-|----+--------------+------+---------------------------------|
-|  1 | core         |    1 |                                 |
-|  2 | language     |    1 |                                 |
-|  3 | tag          |    1 |                                 |
-|  4 | category     |    1 |                                 |
-|  5 | length       |    3 |                                 |
-|  6 | eng          |    2 |                                 |
-|  7 | fre          |    2 |                                 |
-|  8 | ger          |    2 |                                 |
-|  9 | width        |    3 |                                 |
-| 10 | tool         |    4 |                                 |
-| 11 | person       |    4 |                                 |
-| 12 | car          |    4 |                                 |
-| 13 | vehicle      |    4 |                                 |
-| 14 | mars rover   |    4 |                                 |
-| 20 | name         |    3 |                                 |
-| 21 | dimension    |    3 | grouping fk to group.group      |
-| 22 | xlength      |   21 | no!                             |
-| 23 | xwidth       |   21 | no!                             |
-| 24 | xheight      |   21 | no!                             |
-| 25 | xdiagnonal   |   21 | no!                             |
-| 26 | width        |    3 |                                 |
-| 27 | height       |    3 |                                 |
-| 28 | diagonal     |    3 |                                 |
-| 29 | latitide     |    3 | place                           |
-| 30 | longitude    |    3 | place                           |
-| 31 | place_uri    |    3 | place                           |
-| 32 | place_name   |    3 | place                           |
-| 33 | country_code |    3 | place                           |
-| 34 | place        |    1 | core place.type=core.id         |
-| 36 | tabletable   |    1 | tabletable type, for structured |
+| id | tag           | type | notes                            |
+|----+---------------+------+----------------------------------|
+|  1 | core          |    1 |                                  |
+|  2 | language      |    1 |                                  |
+|  3 | tag           |    1 |                                  |
+|  4 | category      |    1 |                                  |
+|  5 | length        |    3 |                                  |
+|  6 | eng           |    2 |                                  |
+|  7 | fre           |    2 |                                  |
+|  8 | ger           |    2 |                                  |
+|  9 | width         |    3 | has width                        |
+| 10 | tool          |    4 | is-a tool                        |
+| 11 | person        |    4 | is-a person                      |
+| 12 | car           |    4 | is-a car                         |
+| 13 | vehicle       |    4 | is-a vehicle                     |
+| 14 | mars rover    |    4 | is-a mars rover                  |
+| 20 | name          |    3 | has name                         |
+| 21 | dimension     |    3 | grouping fk to group.group       |
+| 22 | xlength       |   21 | no! Why not? Maybe just          |
+| 23 | xwidth        |   21 | no! need a group column here     |
+| 24 | xheight       |   21 | no! like in table                |
+| 25 | xdiagnonal    |   21 | no! tabletable.                  |
+| 26 | width         |    3 | has width (duplicates id 9)      |
+| 27 | height        |    3 | has height                       |
+| 28 | diagonal      |    3 | has diagonal length              |
+| 29 | latitide      |    3 | place (type 34?)                 |
+| 30 | longitude     |    3 | place (type 34?)                 |
+| 31 | place_uri     |    3 | place (type 34?)                 |
+| 32 | place_name    |    3 | place (type 34?)                 |
+| 33 | country_code  |    3 | place (type 34?)                 |
+| 34 | place         |    1 | core place.type=core.id          |
+| 36 | tabletable    |    1 | tabletable type, for structured  |
+| 38 | visited-place |    2 | visited this place, use group 35 |
+| 40 | ultraviolet   |    3 | sees ultraviolet                 |
+| 41 | ultraviolet   |    3 | reflects ultraviolet             |
 
 
-table group, tabletable, ?
+Is there a group description vs a group instance? (Group instance is group_tag.) Group 35 describes a
+place. Where is the data for a place instance stored? (table group_tag) Once we have group, why is a singleton
+tag not a group with a singleton member? (Only because singletons are simpler, and don't need group
+complexity, however, notice that table vocabulary could be tabletable by adding column "group".)
 
-| group | member | note         |
-|-------+--------+--------------|
-|    21 |      5 | dim:length   |
-|    21 |     26 | dim:width    |
-|    21 |     27 | dim:height   |
-|    35 |     29 | place:lat    |
-|    35 |     30 | place:lon    |
-|    35 |     31 | place:uri    |
-|    35 |     32 | place:name   |
-|    35 |     33 | place:c_code |
+What is the relationship between a singleton longitude and place:longitude? They are the same number and
+units, but one is a singleton and the other only exists in a group. The label and description can be the same,
+so they could be from the same vocabulary.
 
-table thing
+table tabletable aka group
+
+| group | member | note             |
+|-------+--------+------------------|
+|    21 |      5 | dimension:length |
+|    21 |     26 | dimension:width  |
+|    21 |     27 | dimension:height |
+|    35 |     29 | place:lat        |
+|    35 |     30 | place:lon        |
+|    35 |     31 | place:uri        |
+|    35 |     32 | place:name       |
+|    35 |     33 | place:c_code     |
+
+
+table group_tag
+
+like tag, but the tags are groups from tabletable.
+group_tag.id = tag.group_tag_fk
+
+| id | group | member | number | unit | value               |
+|----+-------+--------+--------+------+---------------------|
+| 39 |    35 |     29 |    127 |      |                     |
+| 39 |    35 |     30 |     45 |      |                     |
+| 39 |    35 |     31 |        |      | http://foo.org/1234 |
+| 39 |    35 |     32 |        |      | Isle Dulce          |
+| 39 |    35 |     33 |        |      | exm                 |
+
+table item aka thing
 
 | id | name  | note                        |
 |----+-------+-----------------------------|
@@ -58,18 +85,23 @@ table thing
 | 18 | dog   | a specific companion animal |
 | 19 | rover | a specific mars rover       |
 
+Q: Seems like we could put date and date range in this table, but then date would not be universal to all
+tables.
+A: Add column group_tag_fk and put groupish tags over in table group_tag, with an fk here. Table tabletable
+becomes a more complex vocabulary. Ask Noah if tabletable and group_tag is the "multivalued column" he was
+talking about.
+
 table tag
 
-Seems like we could put date and date range in this table, but then date would not be universal to all tables.
-
-| id | item_fk | vocab_fk | numeric | unit  | value       | note                 |
-|----+---------+----------+---------+-------+-------------+----------------------|
-| 21 |      17 |       10 |         |       |             | generic tool         |
-| 22 |      18 |       20 |         |       | Daisy       | the actual dog Daisy |
-| 26 |      18 |       20 |         |       | Little Poo  | alt name             |
-| 23 |      19 |       14 |         |       |             |                      |
-| 24 |      19 |       20 |         |       | Opportunity |                      |
-| 25 |      19 |        5 |       1 | meter |             |                      |
+| id | item_fk | vocab_fk | vterm         | numeric | unit  | value       | group_tag_fk | note                                         |
+|----+---------+----------+---------------+---------+-------+-------------+--------------+----------------------------------------------|
+| 21 |      17 |       10 | tool          |         |       |             |              | a drill is a tool                            |
+| 22 |      18 |       20 | name          |         |       | Daisy       |              | the actual dog Daisy                         |
+| 26 |      18 |       20 | name          |         |       | Little Poo  |              | Daisy alt name                               |
+| 37 |      18 |       38 | visited-place |         |       |             |           39 | Daisy visited this place, fk to group_tag.id |
+| 23 |      19 |       14 | mars rover    |         |       |             |              | Opportunity is-a mars rover                  |
+| 24 |      19 |       20 | name          |         |       | Opportunity |              | Opportunity has name ...                     |
+| 25 |      19 |        5 | length        |       3 | meter |             |              | Opportunity is 3 meters long                 |
 
 
 a peer
