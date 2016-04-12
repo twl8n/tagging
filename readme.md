@@ -53,6 +53,7 @@ todo: See what happens if table tabletable is broken into two tables (in the tag
 
 table "tag_value" (must be a vocabulary tag with unique row id tag_value.id implied)
 
+
 | id       | value       | note |
 |----------+-------------+------|
 | name-1   | daisy       |      |
@@ -69,8 +70,11 @@ table "tag_value" (must be a vocabulary tag with unique row id tag_value.id impl
 | weight-2 |             |      |
 | birth-1  |             |      |
 
+
+
 table tabletable (Both id columns must be fk to tag_value) Can this table be broken into two tables? Notice
 the repeats in the first column. However, remember that both id columns are fks, not data.
+
 
 | id       | id       | sentence | note |
 |----------+----------+----------+------|
@@ -87,7 +91,9 @@ the repeats in the first column. However, remember that both id columns are fks,
 | birth-1  | weight-1 |        5 |      |
 | weight-1 | pounds-2 |        5 |      |
 
+
 table item
+
 
 | item_fk | sentence | note |
 |---------+----------+------|
