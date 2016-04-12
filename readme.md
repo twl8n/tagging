@@ -55,7 +55,7 @@ table "tag_value" (must be a vocabulary tag with unique row id tag_value.id impl
 
 
 | id       | value       | note |
-|----------+-------------+------|
+|----------|-------------|------|
 | name-1   | daisy       |      |
 | name-2   | little pooh |      |
 | pounds-1 | 5           |      |
@@ -77,7 +77,7 @@ the repeats in the first column. However, remember that both id columns are fks,
 
 
 | id       | id       | sentence | note |
-|----------+----------+----------+------|
+|----------|----------|----------|------|
 | owner-1  | date-3   |        1 |      |
 | owner-1  | date-1   |        1 |      |
 | name-1   | date-1   |        2 |      |
@@ -96,7 +96,7 @@ table item
 
 
 | item_fk | sentence | note |
-|---------+----------+------|
+|---------|----------|------|
 | daisy   |        1 |      |
 | daisy   |        2 |      |
 | daisy   |        3 |      |
@@ -165,7 +165,7 @@ name: requires value
 place: requires value(s)
 
 | id           | tag/value   | note               |
-|--------------+-------------+--------------------|
+|--------------|-------------|--------------------|
 | name-1       | daisy       | daisy name-1 value |
 | name-2       | little pooh | name-2 value       |
 | weight-unit  | pounds      |                    |
@@ -177,7 +177,7 @@ place: requires value(s)
 | owner-2      | abby        |                    |
 
 | id     | and | id      |
-|--------+-----+---------|
+|--------|-----|---------|
 | name-1 |     | place-1 |
 | name-1 |     | date-1  |
 | name-1 |     | owner-1 |
@@ -187,7 +187,7 @@ place: requires value(s)
 | birth  |     | date-1  |
 
 | id     | op  | id      | rowid | sentence |
-|--------+-----+---------+-------+----------|
+|--------|-----|---------|-------|----------|
 | name-1 | and | place-1 |     1 |        1 |
 | name-1 | and | date-1  |     2 |        1 |
 | name-1 | and | owner-1 |     3 |        1 |
@@ -200,7 +200,7 @@ place: requires value(s)
 
 
 | item_fk | group | tag     | note           |
-|---------+-------+---------+----------------|
+|---------|-------|---------|----------------|
 | daisy   |    21 | name-1  | daisy name     |
 | daisy   |    21 | name-2  | daisy alt name |
 | daisy   |    21 | weight  | daisy weight   |
@@ -230,7 +230,7 @@ See Documents/tagging.odb
 table vocabulary
 
 | id | tag          | type | notes                               |
-|----+--------------+------+-------------------------------------|
+|----|--------------|------|-------------------------------------|
 |  1 | core         |    1 |                                     |
 |  2 | language     |    1 |                                     |
 |  3 | noun-tag     |    1 | See 42 verb-tag                     |
@@ -300,7 +300,7 @@ so they could be from the same vocabulary.
 table tabletable aka group aka group-link
 
 | group | member | note             |
-|-------+--------+------------------|
+|-------|--------|------------------|
 |    21 |      5 | dimension:length |
 |    21 |     26 | dimension:width  |
 |    21 |     27 | dimension:height |
@@ -320,7 +320,7 @@ noun-tag types creating group tags.
 table tabletable with singletons and values
 
 | group | member | note             |
-|-------+--------+------------------|
+|-------|--------|------------------|
 |    21 |      5 | dimension:length |
 |    21 |     26 | dimension:width  |
 |    21 |     27 | dimension:height |
@@ -402,7 +402,7 @@ table group_tag aka group tag instance, group_tag.id = tag.group_tag_fk
 (Linking table between tabletable and tag, instances of tabletable linked to table tag)
 
 | id | group | member | value               | unit | note               |
-|----+-------+--------+---------------------+------+--------------------|
+|----|-------|--------|---------------------|------|--------------------|
 | 39 |    35 |     29 | 127                 | 53   | lat, degrees       |
 | 39 |    35 |     30 | 45                  | 53   | lon, degrees       |
 | 39 |    35 |     31 | http://foo.org/1234 |      | uri                |
@@ -426,7 +426,7 @@ group_tag, and table tag would be dropped.
 table item aka thing
 
 | id | name  | note                        |
-|----+-------+-----------------------------|
+|----|-------|-----------------------------|
 | 17 | drill | electric drill retail item  |
 | 18 | dog   | a specific companion animal |
 | 19 | rover | a specific mars rover       |
@@ -437,7 +437,7 @@ table tag
 | id | item_fk | vocab_fk     | vocab_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
 |    |         | verb-ish     | noun-ish |            |             |       |              |                                              |
 |    |         | tag          |      tag |            |             |       |              |                                              |
-|----+---------+--------------+----------+------------+-------------+-------+--------------+----------------------------------------------|
+|----|---------|--------------|----------|------------|-------------|-------|--------------|----------------------------------------------|
 | 21 |      17 | 45 (is-a)    |       10 | tool       |             |       |              | a drill is a tool                            |
 | 22 |      18 | 44 (has-a)   |       20 | name       | Daisy       |       |              | the actual dog Daisy                         |
 | 26 |      18 | 44           |       20 | name       | Little Pooh |       |              | Daisy alt name                               |
@@ -453,7 +453,7 @@ table tag
 | id | item_fk | vocab_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
 |    |         | noun-ish |            |             |       |              |                                              |
 |    |         |      tag |            |             |       |              |                                              |
-|----+---------+----------+------------+-------------+-------+--------------+----------------------------------------------|
+|----|---------|----------|------------|-------------|-------|--------------|----------------------------------------------|
 | 21 |      17 |       10 | tool       |             |       |              | a drill is a tool                            |
 | 22 |      18 |       20 | name       | Daisy       |       |              | the actual dog Daisy                         |
 | 26 |      18 |       20 | name       | Little Pooh |       |              | Daisy alt name                               |
@@ -479,7 +479,7 @@ table tag, related to table value_unit
 | id | item_fk | vocab_fk     | vocab_fk | vterm      | group_tag_fk | note                                         |
 |    |         | verb-ish     | noun-ish |            |              |                                              |
 |    |         | tag          |      tag |            |              |                                              |
-|----+---------+--------------+----------+------------+--------------+----------------------------------------------|
+|----|---------|--------------|----------|------------|--------------|----------------------------------------------|
 | 21 |      17 | 45 (is-a)    |       10 | tool       |              | a drill is a tool                            |
 | 22 |      18 | 44 (has-a)   |       20 | name       |              | the actual dog Daisy                         |
 | 26 |      18 | 44           |       20 | name       |              | Daisy alt name                               |
@@ -494,7 +494,7 @@ table value_unit value_unit.tag_fk=tag.id
 | tag_fk | value       | unit  | note                         |
 |        |             |       |                              |
 |        |             |       |                              |
-|--------+-------------+-------+------------------------------|
+|--------|-------------|-------|------------------------------|
 |     22 | Daisy       |       | the actual dog Daisy, name   |
 |     26 | Little Pooh |       | Daisy alt name               |
 |     24 | Opportunity |       | Opportunity, name            |
@@ -507,7 +507,7 @@ table value_unit value_unit.tag_fk=tag.id
 table mtag aka multitag
 
 | id | item_fk | mtag_fk | value | note                              |
-|----+---------+---------+-------+-----------------------------------|
+|----|---------|---------|-------|-----------------------------------|
 | 47 |      19 |      48 |     3 | mars rover has length in meters 3 |
 
 
@@ -515,7 +515,7 @@ table sentence aka mtag link
 
 
 | id | tag | note   |
-|----+-----+--------|
+|----|-----|--------|
 | 48 |  44 | has    |
 | 48 |   5 | length |
 | 48 |  50 | meter  |
@@ -526,7 +526,7 @@ What happens when there are multiple values per mtag?
 
 
 | id | item_fk | mtag_fk      | value | note                         |
-|----+---------+--------------+-------+------------------------------|
+|----|---------|--------------|-------|------------------------------|
 | 51 |      19 | 47 (mtag.id) |     3 | Opp. has length meters 3     |
 
 
@@ -537,7 +537,7 @@ group uses same id sequence as all record ids
 
 
 | fkid | key   | group | note                                           |
-|------+-------+-------+------------------------------------------------|
+|------|-------|-------|------------------------------------------------|
 |   11 | ata   |    15 | car is a type of vehicle                       |
 |   12 | a     |    15 | vehicle is root                                |
 |   13 | ataa  |    15 | rover is a type of vehicle and sorts after car |
@@ -552,7 +552,7 @@ fk=tag.id
 
 
 | fk | from | to      |                                    |
-|----+------+---------+------------------------------------|
+|----|------|---------|------------------------------------|
 | 15 | 1999 | 2010    | older hierarchy                    |
 | 16 | 2010 | present | newer hierarchy                    |
 | 22 | 2003 | present | Daisy named this since birth       |
