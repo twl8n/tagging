@@ -1,36 +1,28 @@
 
 ### Are tags sentences?
 
-Are lists sentences? Markup tags work well as lists:
+Are lists sentences? Markup tags work well as lists. Declarative sentences appear to be alternate forms of
+lists.
 
-(thing (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))
+An entity in Richmond, in 2003 weighed 5 pounds.
 
-"In Richmond, in 2003 weight was 5 pounds."
+(entity (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))
 
-Declarative sentences appear to be alternate forms of lists. 
+A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio.
 
-Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio.
+(entity (id 1234) (entity-type person) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))
 
-(thing (id 1234) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))
-
-"I want to purchase 500 things."
+Some sentences are awkward: I want to purchase 500 things.
 
 (me (desire (purchase (things 500))))
 
-These two examples are still unclear:
+Prepositions become unambiguous by applying them to a "place" or "date", and moving the second noun into the
+relative location argument. (I can never remember which is the subject and which is the object, but in this
+grammar, the distinctions are both meaningless and unnecessary.) 
 
-My classic: The ball is behind the red door.
+My classic: The red ball is behind the red door.
 
-(door (behind ball) (color red))
-(door (behind-self ball) (color red)) 
-(door (furthest (ball (location (behind door)))) (color red))
-;; This might be best:
-(door (ball (location (behind door))) (color red))
-(door (things-in-front-of-self null) (things-behind-self ball) (color red))
-
-As opposed to: Behind the red ball is the door.
-
-(ball (color red) (behind door))
+(ball (place (behind door)) (color red))
 
 ### Tagging demo
 
@@ -38,24 +30,28 @@ todo: See what happens if table tabletable is broken into two tables (in the tag
 
 Imagine tagging the dog, Daisy. 
 
-Lists work much better due to less ambiguity based on grouping aka association and explicit binding of tags to
-other tags. There seems to be no need for "and" or "or". I can't tell the difference between "date or date"
-and "date and date". "Or" may imply "uncertainty", but uncertainty is a broad, nuanced concept not quite
-captured by "or".
+Lists work much better than simple name:value pairs due to decreased ambiguity due to grouping aka association
+and explicit binding of tags to other tags. In terms of clarity and simplicity, the best statements are flat,
+and-ed lists. "Or" implies "uncertainty", but uncertainty is a broad, nuanced concept that may not be fully
+expressed simply by "or".
+
+Nesting arguments should probably be illegal. The inner nested tags do no describe the higher level tags, and
+thus nesting creates statements that have convoluted meaning that humans can easily fail to
+understand. Lacking a compelling reason for nesting, it is not supported.
 
 todo: See what happens if table tabletable is broken into two tables (in the tagging demo list section below).
 
 (owner charlotte (date 2003) (date 2002))
 (name daisy (date 2002) (date 2015))
 (name 'little pooh' (date 2015))
-(weight (pounds 5) (place richmond (date 2003)))
+(weight (pounds 5) (place richmond) (date 2003))
 (birth (date 2002) (owner charlotte) (weight (pounds 0.5)))
 
 table "tag_value" (must be a vocabulary tag with unique row id tag_value.id implied)
 
 
 | id       | value       | note |
-|----------|-------------|------|
+|----------+-------------+------|
 | name-1   | daisy       |      |
 | name-2   | little pooh |      |
 | pounds-1 | 5           |      |
@@ -229,51 +225,72 @@ See Documents/tagging.odb
 
 table vocabulary
 
-| id | tag          | type | notes                               |
-|----|--------------|------|-------------------------------------|
-|  1 | core         |    1 |                                     |
-|  2 | language     |    1 |                                     |
-|  3 | noun-tag     |    1 | See 42 verb-tag                     |
-|  4 | category     |    1 | How different from id 3?            |
-|  5 | length       |    8 | measured-type                       |
-|  6 | eng          |    2 |                                     |
-|  7 | fre          |    2 |                                     |
-|  8 | measured     |    1 | core measured, has a value and unit |
-|  9 | width        |    8 | measured-type                       |
-| 10 | tool         |    4 | tool                                |
-| 11 | person       |    4 | person                              |
-| 12 | car          |    4 | car                                 |
-| 13 | vehicle      |    4 | vehicle                             |
-| 14 | mars rover   |    4 | mars rover                          |
-| 20 | name         |    3 | name                                |
-| 21 | dimension    |    3 | grouping fk to group.group          |
-| 22 | xlength      |   21 | no! Avoid self join                 |
-| 23 | xwidth       |   21 | no! problems by moving              |
-| 24 | xheight      |   21 | no! groups-type tags to             |
-| 25 | xdiagnonal   |   21 | no! tabletable.                     |
-| 26 | width        |    3 | has width (duplicates id 9)         |
-| 27 | height       |    8 | measured-type                       |
-| 28 | diagonal     |    8 | measured-type                       |
-| 29 | latitide     |    8 | measured-type, place (type 34?)     |
-| 30 | longitude    |    8 | measured-type, place (type 34?)     |
-| 31 | place_uri    |    3 | place (type 34?)                    |
-| 32 | place_name   |    3 | place (type 34?)                    |
-| 33 | country_code |    3 | place (type 34?)                    |
-| 34 | place        |   46 | group-type                          |
-| 36 | tabletable   |    1 | tabletable type, for structured     |
-| 38 | visited      |   42 | visited                             |
-| 40 | ultraviolet  |    3 | ultraviolet as a noun               |
-| 42 | verb-tag     |    1 | See 2 noun-tag                      |
-| 43 | sees         |   42 | is able to visually distinguish     |
-| 44 | has-a        |   42 | or has                              |
-| 45 | is-a         |   42 |                                     |
-| 46 | group-tag    |    1 | type for tags over in tabletable    |
-| 49 | unit         |    1 | core unit type, all have values     |
-| 50 | meter        |   49 | unit-type                           |
-| 53 | degree       |   49 | unit-type                           |
-| 54 | weight       |    8 | measured-type                       |
-| 55 | pound        |   49 |                                     |
-| 56 | dog          |    3 | (is-a) dog                          |
+| id | tag            | type | notes                                          |
+|----+----------------+------+------------------------------------------------|
+|  1 | core           |    1 |                                                |
+|  2 | language       |    1 |                                                |
+|  3 | tag            |    1 | tag                                            |
+| 21 | tag_one_arg    |    3 | tag need a value arg                           |
+| 57 | tag_one_tag    |    3 | requires 1 tag arg                             |
+| 22 | tag_multi_tag  |    3 | requires 1 or more tag args                    |
+| 60 |                |      |                                                |
+| 61 | et_value       |    4 | entity type value group category               |
+|  4 | category       |    1 | How different from id 3?                       |
+|  5 | length         |   57 | needs unit+value                               |
+|  6 | eng            |    2 |                                                |
+|  7 | fre            |    2 |                                                |
+|  8 | measured       |    1 | core measured, has a value and unit            |
+|  9 | width          |   57 | needs unit+value                               |
+| 10 | tool           |    4 | tool                                           |
+| 11 | person         |   61 | entity type value                              |
+| 62 | corporate body |   61 | entity type value                              |
+| 63 | family         |   61 | entity type value                              |
+| 12 | car            |   13 | vehicle sub category                           |
+| 13 | vehicle        |    4 | vehicle                                        |
+| 14 | mars rover     |   13 | mars rover                                     |
+| 20 | name           |   21 | name needs value                               |
+| 23 | birth          |   22 | birth meta data                                |
+| 24 | death          |   22 | death meta data                                |
+| 25 | active         |   22 | active period meta data                        |
+| 26 | entity_type    |   21 | tag, requires an et_value, could be type 3     |
+| 27 | height         |   57 | needs unit+value                               |
+| 28 | diagonal       |   57 | needs unit+value                               |
+| 29 | latitide       |   57 | needs unit+value                               |
+| 30 | longitude      |   57 | needs unit+value                               |
+| 31 | place_uri      |    3 | place (type 34?)                               |
+| 32 | place_name     |    3 | place (type 34?)                               |
+| 33 | country_code   |    3 | needs value                                    |
+| 34 | place          |   46 | group-type                                     |
+| 36 | tabletable     |    1 | tabletable type, for structured                |
+| 38 | visited        |   22 | needs place tag group                          |
+| 40 | ultraviolet    |    3 | a category?                                    |
+| 42 | unit           |   21 | unit needs an arg                              |
+| 43 | sees           |   22 | vision meta data                               |
+| 44 | angle_unit     |   42 | angle unit tag                                 |
+| 45 | mass_unit      |   42 | mass unit tag                                  |
+| 46 | group-tag      |    3 | type for tags over in tabletable               |
+| 49 | distance_unit  |   42 | unit type tag, all need 1 arg                  |
+| 50 | meter          |   49 | unit, distance                                 |
+| 53 | degree         |   44 | unit, angle                                    |
+| 54 | weight         |   57 | needs a tag arg (create a tag that needs mass) |
+| 55 | pound          |   45 | mass unit                                      |
+| 56 | dog            |    4 | value for entity type                          |
+| 58 | date           |   46 | group-type date                                |
+| 59 | kilogram       |   45 | mass unit                                      |
+| 64 | gram           |   45 | mass unit                                      |
+| 65 | stone          |   45 | mass unit                                      |
+| 66 | radian         |   44 | angle unit                                     |
+
+table required (allowed?) arg type
+
+| id | arg | note                                |
+|----+-----+-------------------------------------|
+| 26 |  61 | entity_type arg from group et_value |
+|  9 |  69 | width needs a distance unit arg     |
+| 54 |  45 | weight needs a mass unit arg        |
+| 23 |  46 | birth place                         |
+| 23 |  58 | birth date                          |
+| 23 |  54 | birth weight                        |
 
 After much discussion with Noah, we have concluded that combining table vocab and tabletable is a bad
 idea. Adding a column to vocab would enable tags and arbitrary complexity. Even though self joins work, and
