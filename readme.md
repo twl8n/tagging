@@ -12,7 +12,8 @@ A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in
 
 `(entity (id 1234) (entity-type person) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))`
 
-Some sentences are awkward: I want to purchase 500 things.
+Some sentences are awkward. This example is more relevant to the Definitionary than to tagging: I want to
+purchase 500 things.
 
 `(me (desire (purchase (things 500))))`
 
@@ -424,25 +425,24 @@ table item aka thing
 
 table tag
 
-| id | item_fk | vocab_fk     | vocab_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
-|    |         | verb-ish     | noun-ish |            |             |       |              |                                              |
-|    |         | tag          |      tag |            |             |       |              |                                              |
-|----|---------|--------------|----------|------------|-------------|-------|--------------|----------------------------------------------|
-| 21 |      17 | 45 (is-a)    |       10 | tool       |             |       |              | a drill is a tool                            |
-| 22 |      18 | 44 (has-a)   |       20 | name       | Daisy       |       |              | the actual dog Daisy                         |
-| 26 |      18 | 44           |       20 | name       | Little Pooh |       |              | Daisy alt name                               |
-| 37 |      18 | 38 (visited) |       38 | visited    |             |       |           39 | Daisy visited this place, fk to group_tag.id |
-| 23 |      19 | 45 (is-a)    |       14 | mars rover |             |       |              | Opportunity is-a mars rover                  |
-| 24 |      19 | 44 (has-a)   |       20 | name       | Opportunity |       |              | Opportunity has name ...                     |
-| 25 |      19 | 44 (has-a)   |        5 | length     | 3           | meter |              | Opportunity is 3 meters long                 |
-| 51 |      19 | 47 (mtag.id) |          |            | 3           |       |              | Opp. has length meters 3                     |
+vocab1_fk is a verb-ish tag
+vocab2_fk is a noun-ish tag
+
+| id | item_fk | vocab1_fk    | vocab2_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
+|----|---------|--------------|-----------|------------|-------------|-------|--------------|----------------------------------------------|
+| 21 |      17 | 45 (is-a)    |        10 | tool       |             |       |              | a drill is a tool                            |
+| 22 |      18 | 44 (has-a)   |        20 | name       | Daisy       |       |              | the actual dog Daisy                         |
+| 26 |      18 | 44           |        20 | name       | Little Pooh |       |              | Daisy alt name                               |
+| 37 |      18 | 38 (visited) |        38 | visited    |             |       |           39 | Daisy visited this place, fk to group_tag.id |
+| 23 |      19 | 45 (is-a)    |        14 | mars rover |             |       |              | Opportunity is-a mars rover                  |
+| 24 |      19 | 44 (has-a)   |        20 | name       | Opportunity |       |              | Opportunity has name ...                     |
+| 25 |      19 | 44 (has-a)   |         5 | length     | 3           | meter |              | Opportunity is 3 meters long                 |
+| 51 |      19 | 47 (mtag.id) |           |            | 3           |       |              | Opp. has length meters 3                     |
 
 
 
 
-| id | item_fk | vocab_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
-|    |         | noun-ish |            |             |       |              |                                              |
-|    |         |      tag |            |             |       |              |                                              |
+| id | item_fk | vocab2_fk | vterm      | value       | unit  | group_tag_fk | note                                         |
 |----|---------|----------|------------|-------------|-------|--------------|----------------------------------------------|
 | 21 |      17 |       10 | tool       |             |       |              | a drill is a tool                            |
 | 22 |      18 |       20 | name       | Daisy       |       |              | the actual dog Daisy                         |
