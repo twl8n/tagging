@@ -6,15 +6,15 @@ lists.
 
 An entity in Richmond, in 2003 weighed 5 pounds.
 
-(entity (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))
+`(entity (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))`
 
 A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio.
 
-(entity (id 1234) (entity-type person) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))
+`(entity (id 1234) (entity-type person) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))`
 
 Some sentences are awkward: I want to purchase 500 things.
 
-(me (desire (purchase (things 500))))
+`(me (desire (purchase (things 500))))`
 
 Prepositions become unambiguous by applying them to a "place" or "date", and moving the second noun into the
 relative location argument. (I can never remember which is the subject and which is the object, but in this
@@ -22,7 +22,7 @@ grammar, the distinctions are both meaningless and unnecessary.)
 
 My classic: The red ball is behind the red door.
 
-(ball (place (behind door)) (color red))
+`(ball (place (behind door)) (color red))`
 
 ### Tagging demo
 
@@ -41,17 +41,18 @@ understand. Lacking a compelling reason for nesting, it is not supported.
 
 todo: See what happens if table tabletable is broken into two tables (in the tagging demo list section below).
 
+```
 (owner charlotte (date 2003) (date 2002))
 (name daisy (date 2002) (date 2015))
 (name 'little pooh' (date 2015))
 (weight (pounds 5) (place richmond) (date 2003))
 (birth (date 2002) (owner charlotte) (weight (pounds 0.5)))
+```
 
 table "tag_value" (must be a vocabulary tag with unique row id tag_value.id implied)
 
-
 | id       | value       | note |
-|----------+-------------+------|
+|----------|-------------|------|
 | name-1   | daisy       |      |
 | name-2   | little pooh |      |
 | pounds-1 | 5           |      |
@@ -68,63 +69,43 @@ table "tag_value" (must be a vocabulary tag with unique row id tag_value.id impl
 
 
 
-table tabletable (Both id columns must be fk to tag_value) Can this table be broken into two tables? Notice
-the repeats in the first column. However, remember that both id columns are fks, not data.
+table tabletable Columns tag_fk, arg_fk must be fk to tag_value.id. Can this table be broken into two tables
+based on repeats in the tag_fk column for a given sentence_fk? Probably not since tag_fk is a foreign key, not
+data, so no data is repeated.
 
 
-| id       | id       | sentence | note |
-|----------|----------|----------|------|
-| owner-1  | date-3   |        1 |      |
-| owner-1  | date-1   |        1 |      |
-| name-1   | date-1   |        2 |      |
-| name-1   | date-2   |        2 |      |
-| name-2   | date-2   |        3 |      |
-| weight-2 | pounds-1 |        4 |      |
-| weight-2 | place-1  |        4 |      |
-| place-1  | date-3   |        4 |      |
-| birth-1  | date-1   |        5 |      |
-| birth-1  | owner-1  |        5 |      |
-| birth-1  | weight-1 |        5 |      |
-| weight-1 | pounds-2 |        5 |      |
+| item_fk | tag_fk   | arg_fk   | sentence_fk | note |
+|---------|----------|----------|-------------|------|
+| daisy   | owner-1  | date-3   |           1 |      |
+| daisy   | owner-1  | date-1   |           1 |      |
+| daisy   | name-1   | date-1   |           2 |      |
+| daisy   | name-1   | date-2   |           2 |      |
+| daisy   | name-2   | date-2   |           3 |      |
+| daisy   | weight-2 | pounds-1 |           4 |      |
+| daisy   | weight-2 | place-1  |           4 |      |
+| daisy   | place-1  | date-3   |           4 |      |
+| daisy   | birth-1  | date-1   |           5 |      |
+| daisy   | birth-1  | owner-1  |           5 |      |
+| daisy   | birth-1  | weight-1 |           5 |      |
+| daisy   | weight-1 | pounds-2 |           5 |      |
 
 
-table item
+table sentence not necessary if column item_fk exists in tabletable.
+
+| item_fk | sentence    | note |
+|---------|-------------|------|
+| daisy   |           1 |      |
+| daisy   |           2 |      |
+| daisy   |           3 |      |
+| daisy   |           4 |      |
+| daisy   |           5 |      |
+|         |             |      |
+|         |             |      |
+|         |             |      |
+|         |             |      |
+|         |             |      |
 
 
-| item_fk | sentence | note |
-|---------|----------|------|
-| daisy   |        1 |      |
-| daisy   |        2 |      |
-| daisy   |        3 |      |
-| daisy   |        4 |      |
-| daisy   |        5 |      |
-|         |          |      |
-|         |          |      |
-|         |          |      |
-|         |          |      |
-|         |          |      |
-
-
-Older thoughts:
-
-Kind of name:value tags. These are more ambiguous and overall less satisfying than the lists above.
-
-owner:charlotte and (date:2003 or date:2002)
-name:daisy and (date:2002 or date:2015)
-name:little pooh and date:2015
-(weight-unit:pounds and weight-value:5) and place:richmond and date:2003
-birth: and date:2002 and owner:charlotte and (weight-unit:pounds and weight-value:0.5)
-
-I'm leaning towards "and" for all relationships, and queries can allow alternation (or), similar to strings
-which a not uncertain, but you can still use alternation in a regex against a string.
-
-
-
-The work below is older than the list system above.
-
-Born in 2002 in Richmond. Owned by Charlotte. Weighing 0.5 pounds. Etc. Below
-are some example "sentences". There are a few rules. Some tags have a required value. Some tags have required
-"and" tags. Some tags are exclusive for "and" (multiple "and" instances not allowed, such as date, weight). 
 
 Some tags are exclusive-and aka multi-not-ok which means they are exclusive: place, date(?), birth,
 weight. You can't be in two places at the same time. Some things cannot be true at two different times. You
@@ -134,15 +115,6 @@ Some tags are multi-ok which means they can and with self. For example: owner, n
 
 Q: Can you be in two places if there is no date specified? (Yes, but birth: with two places is non-sense.)
 
-Q: Does the computer system care about nonsense? Some obvious nonsense can be prevented by having a rule
-system.
-
-Q: What is the meaning of "or"? Is it "can match either value in a WHERE clause"?
-
-Q: How to encode () parenthesis grouping in the db?
-
-Q: Is the meaning of "and" "must satisfy all these constraints when matching a WHERE clause"?
-
 Q: How can SQL handle multi-value matches such as date:2002 and date:2003?
 
 Wrong due to multiple exclusive weight values, can't "and" multiple weights:
@@ -151,7 +123,8 @@ Wrong due to multiple exclusive weight values, can't "and" multiple weights:
 Ok, uncertainty about weight:
 ((weight-unit:pounds and weight-value:5) or ( weight-unit:kg and weight-value:0.8)) and place:richmond and date:2003 
 
-?Wrong, something can't happen simultaneously at two different times:
+Two dates means something is true at both times, and must mean two events. Distinct events cannot be simultaneous in a
+4 dimensional universe:
 owner:charlotte and (date:2003 and date:2002)
 
 weight: requires tag:value
@@ -226,7 +199,7 @@ See Documents/tagging.odb
 table vocabulary
 
 | id | tag            | type | notes                                          |
-|----+----------------+------+------------------------------------------------|
+|----|----------------|------|------------------------------------------------|
 |  1 | core           |    1 |                                                |
 |  2 | language       |    1 |                                                |
 |  3 | tag            |    1 | tag                                            |
@@ -284,7 +257,7 @@ table vocabulary
 table required (allowed?) arg type
 
 | id | arg | note                                |
-|----+-----+-------------------------------------|
+|----|-----|-------------------------------------|
 | 26 |  61 | entity_type arg from group et_value |
 |  9 |  69 | width needs a distance unit arg     |
 | 54 |  45 | weight needs a mass unit arg        |
