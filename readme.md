@@ -466,24 +466,20 @@ potentially a group. has-length-meters is 3 tags. Unclear where the value goes, 
 
 table tag, related to table value_unit
 
-| id | item_fk | vocab_fk     | vocab_fk | vterm      | group_tag_fk | note                                         |
-|    |         | verb-ish     | noun-ish |            |              |                                              |
-|    |         | tag          |      tag |            |              |                                              |
-|----|---------|--------------|----------|------------|--------------|----------------------------------------------|
-| 21 |      17 | 45 (is-a)    |       10 | tool       |              | a drill is a tool                            |
-| 22 |      18 | 44 (has-a)   |       20 | name       |              | the actual dog Daisy                         |
-| 26 |      18 | 44           |       20 | name       |              | Daisy alt name                               |
-| 37 |      18 | 38 (visited) |       38 | visited    |           39 | Daisy visited this place, fk to group_tag.id |
-| 23 |      19 | 45 (is-a)    |       14 | mars rover |              | Opportunity is-a mars rover                  |
-| 24 |      19 | 44 (has-a)   |       20 | name       |              | Opportunity has name ...                     |
-| 25 |      19 | 44 (has-a)   |        5 | length     |              | Opportunity is 3 meters long                 |
-| 51 |      19 | 47 (mtag.id) |          |            |              | Opp. has length meters 3                     |
+| id | item_fk | vocab1_fk    | vocab2_fk | vterm      | group_tag_fk | note                                         |
+|----|---------|--------------|-----------|------------|--------------|----------------------------------------------|
+| 21 |      17 | 45 (is-a)    |        10 | tool       |              | a drill is a tool                            |
+| 22 |      18 | 44 (has-a)   |        20 | name       |              | the actual dog Daisy                         |
+| 26 |      18 | 44           |        20 | name       |              | Daisy alt name                               |
+| 37 |      18 | 38 (visited) |        38 | visited    |           39 | Daisy visited this place, fk to group_tag.id |
+| 23 |      19 | 45 (is-a)    |        14 | mars rover |              | Opportunity is-a mars rover                  |
+| 24 |      19 | 44 (has-a)   |        20 | name       |              | Opportunity has name ...                     |
+| 25 |      19 | 44 (has-a)   |         5 | length     |              | Opportunity is 3 meters long                 |
+| 51 |      19 | 47 (mtag.id) |           |            |              | Opp. has length meters 3                     |
 
 table value_unit value_unit.tag_fk=tag.id
 
 | tag_fk | value       | unit  | note                         |
-|        |             |       |                              |
-|        |             |       |                              |
 |--------|-------------|-------|------------------------------|
 |     22 | Daisy       |       | the actual dog Daisy, name   |
 |     26 | Little Pooh |       | Daisy alt name               |
