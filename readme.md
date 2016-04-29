@@ -8,12 +8,32 @@ An entity in Richmond, in 2003 weighed 5 pounds.
 
 `(entity (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))`
 
-A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio.
+A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio. Structured as below it
+says that all of those alternate names applied at the time of birth. We also have to carefully note that birth
+date and place are not bound to any other information, although birth is. This is an example of nesting that
+should be avoided to the extent that I would be inclined to make it an error. Let us take it as a given fact
+that this entity was not born with an alias. With that given, the following statement is wrong, as well as an unwise
+(nested) statement.
 
 `(entity (id 1234) (entity-type person) (father-of john) (birth (date 1945) (place ohio)) (name pete) (name peter) (name paco))`
 
-Some sentences are awkward. This example is more relevant to the Definitionary than to tagging: I want to
-purchase 500 things.
+These multiple statements are correct, as far as they go. We cannot be sure of the birth name, but we know the
+birth date and place.
+
+```
+(entity (id 1234) (entity-type person) (father-of john) (name peter))
+(entity (id 1234) (birth (date 1945) (place ohio)))
+(entity (id 1234) (name pete) (name paco))
+```
+
+We could use and alternative statment to clarify birth name, which turns out to be the less common (in North
+America) alternative.
+
+`(entity (id 1234) (birth (date 1945) (place ohio) (name paco)))`
+
+
+Some sentences are awkward. This example is more relevant to the Definitionary than to tagging: "I want to
+purchase 500 things."
 
 `(me (desire (purchase (things 500))))`
 
@@ -21,7 +41,7 @@ Prepositions become unambiguous by applying them to a "place" or "date", and mov
 relative location argument. (I can never remember which is the subject and which is the object, but in this
 grammar, the distinctions are both meaningless and unnecessary.) 
 
-My classic: The red ball is behind the red door.
+My classic: "The red ball is behind the red door."
 
 `(ball (place (behind door)) (color red))`
 
