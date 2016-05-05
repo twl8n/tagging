@@ -120,11 +120,6 @@ table sentence not necessary if column item_fk exists in tabletable.
 | daisy   |           3 |      |
 | daisy   |           4 |      |
 | daisy   |           5 |      |
-|         |             |      |
-|         |             |      |
-|         |             |      |
-|         |             |      |
-|         |             |      |
 
 
 
@@ -166,6 +161,7 @@ place: requires value(s)
 | date-2       | 2015        |                    |
 | owner-2      | abby        |                    |
 
+
 | id     | and | id      |
 |--------|-----|---------|
 | name-1 |     | place-1 |
@@ -176,8 +172,9 @@ place: requires value(s)
 | date-2 |     | weight  |
 | birth  |     | date-1  |
 
+
 | id     | op  | id      | rowid | sentence |
-|--------|-----|---------|-------|----------|
+|--------+-----+---------+-------+----------|
 | name-1 | and | place-1 |     1 |        1 |
 | name-1 | and | date-1  |     2 |        1 |
 | name-1 | and | owner-1 |     3 |        1 |

@@ -5,10 +5,8 @@ our @table; # list of hash, see read_state_date() keys: edge, test, func, next
 our %known_states;
 our $default_state;
 our $msg;
-
 our $db_name;
 our $dbh; 
-
 require 'sql_lib.pl';
 
 my $verbose = 0;
@@ -250,7 +248,6 @@ sub table_to_html
 }
 
 
-
 sub add_type
 {
     sql_add_type(type => $ch{type});
@@ -365,7 +362,6 @@ sub render_tag_edit
     print "Content-type: text/html\n\n";
     $template->process($input, $vars) || die $template->error();
     #close($out);
-
 }
 
 sub render
@@ -487,7 +483,7 @@ sub dispatch
     my %funcs = ('button_view_item' => sub { return exists($ch{button_view_item}); },
                  'button_edit_item' => sub { return exists($ch{button_edit_item}); },
                  'button_edit_tag' => sub { return exists($ch{button_edit_tag}); },
-                 'button_tag_update' => sub {  return exists($ch{button_tag_update}); },
+                 'button_tag_update' => sub { return exists($ch{button_tag_update}); },
                  'render_item_info' => \&render_item_info,
                  'render_tag_edit' => \&render_tag_edit,
                  'save_tag' => \&save_tag,
@@ -620,7 +616,6 @@ sub read_state_data
     }
     close(IN);
 }
-
 
 
 sub sanity_check_states

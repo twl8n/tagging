@@ -24,11 +24,20 @@ create table vocab (
 insert into vocab values ((select max(id) from seq), 'core', (select max(id) from seq));
 update seq set id=id+1;
 
-create table tabletable (
-        tgroup integer, -- table group fk to a group type in table vocab
-        member integer -- fk to a tag type 
+create table tag_value (
+        id integer primary key autoincrement,
+        value text, 
+        note text
         );
 
+-- table sentence not necessary if column item_fk exists in tabletable.
+create table tabletable (
+        item_fk integer, -- fk to item
+        tag_fk integer, -- fk to tag_value.id
+        arg_fk integer, -- fk to tag_value.id
+        sentence_fk integer,
+        note text
+        );
 
 -- The "things" we're tagging. The tags are linked back to this table via tag.item_fk=item.id
 create table item (
