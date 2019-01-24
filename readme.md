@@ -4,9 +4,15 @@
 Are lists sentences? Markup tags work well as lists. Declarative sentences appear to be alternate forms of
 lists.
 
-An entity in Richmond, in 2003 weighed 5 pounds.
+An entity in Richmond, in 2003 weighed 5 pounds. It is best to use singular for unit names.
 
-`(entity (id 456) ((weight (pounds 5)) (place richmond) (date 2003)))`
+`(entity (id 456) ((weight (pound 5)) (place richmond) (date 2003)))`
+
+Parsing units and number of dimensions, we can use a shortcut syntax. Anything "pounds" must be weight. A single length is length. Three length dimensions must be some order of length, width, height.
+
+`(name "saw blade" (inch 8))` must be an 8 inch saw blade. However, if blade thickness is also in inches, then the attribute must be named:
+
+`(name "saw blade" (thickness (inch .005)) (length (inch 8)))`
 
 A person, Pete aka Peter aka Paco is the father of john, and was born in 1945 in Ohio. Structured as below it
 says that all of those alternate names applied at the time of birth. We also have to carefully note that birth
