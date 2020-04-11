@@ -1,0 +1,309 @@
+
+- second table for structure use 4 or 5 column to describe (directed) graph structure
+
+pk_id -- primary key, probably not absolutely necessary
+graph_name text
+edge_label text
+start_node int -- fk to a row of data
+end_node int -- fk to a row of data
+
+- update schema to match readme.md
+
+- update edit pages to be able to make sentences
+
+- + change button tests to use button_test() and change dispatch() to use anon subs.
+
+Needs to be tested.
+
+- firefox manifest, mostly mobile
+
+storage api firefox
+
+https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Storage
+
+
+https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS/Firefox_OS_apps/Building_apps_for_Firefox_OS/Manifest
+
+firefox developer edition
+
+https://www.mozilla.org/firefox/developer/
+
+Service worker:
+
+https://github.com/mozilla/serviceworker-cookbook/
+
+local storage
+
+https://developers.google.com/web/tools/chrome-devtools/iterate/manage-data/local-storage#web-sql
+
+web local storage
+
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API
+
+indexdb, not sql, javascript OO database
+
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+
+- See what happens if table tabletable is broken into two tables (in the tagging demo list section below).
+
+- x represent tags as sentences, represent them as lists, represent the lists as 2 tables
+
+- enable apache mod_dir
+
+- How to enable tagging with a non-tag core type?
+
+Tag Washington with language -> english
+
+The same question will arise from tabletable tagging.
+
+place will be lat, lon, name, and we will want to tag Washington with a place.
+
+Or more complicated Washington -> birthplace -> place_fk. How do we know that a birthplace tag is a place
+which is defined in tabletable as tags: lat, lon, name?
+
+- taggable thing or thing is a root of a graph of tags and data. Everything can be tagged: cpf, item, concept, place, date
+
+tags are unique keys, especially singletons
+
+some tags have multiple tags. Lincoln -> speech -> physical copy URI, date, place, name aka title, text, image
+
+Lincoln -> height (has is implied)
+Lincoln -> birth -> date (birth clarifies)
+Lincoln -> lived-at -> place (lived-at clarfies)
+Lincoln -> spoke-at -> place (clarifies)
+Lincoln -> place (we have no idea what happened at this place)
+Lincoln -> name -> Abraham (has is implied)
+Lincoln -> gender-male (has or is-a implied)
+
+Was Noah suggesting that spoke-at-place is a single tag, as opposed to spoke-at+place? It seems more flexible
+to separate context (verb) from tag (noun/adjective).
+
+At the same time, gender-male, gender-female is identical (and maybe better than) gender -> (male, female,
+unknown). Gender requires a selection from a one-to-one vocab. "spoke", "lived", "birth" may link up with
+date, place, weight (birth weight). Or maybe there is no distinction, and tags should be singletons.
+
+The computer can generate all the combinations, although not ever combination makes sense, and the limited
+scope seems to argue for turning all tags into singletons (except group-tags).
+
+These make no sense:
+
+spoke-at -> weight (value)
+spoke-at -> (is-a) tool 
+spoke-at -> (is-a) US President 
+
+They seem to be wrong because the tags have implied verbs, and two verbs is wrong. Thus (perhaps) Noah's
+argument: even tags that seem to be singletons or adjectives/nouns always have an implied verb/context.
+
+- The context or relation between the thing and group tag is the tag in tag.vocab_fk
+
+Daisy -> visited -> place
+
+visited, lived-at, born-at, etc?
+
+- relation tags link two trees
+
+- Is the openstreetmap data available for download?
+
+- what is c.crm ontology?
+
+- father_of, child_of, corresponded_with
+
+related_via action (father_of, child-of, drills holes, manufactured-by)
+related_via object (letter, photograph, collection, tool kit)
+related_via tag (family, us presidents, corded drills, manufacturer)
+related_via place
+
+- x change "Tag item" to use thing name/id as a drop down, or open a new window to tag an item, click "tag" in
+  the thing/item table, open new window to add the tag. Seems slow and inefficient, but ok for now.
+
+- + (fix comments, one of the queries below is a sub query) add view, edit thing
+
+select * from item where id=3; 
+
+select * from tag where item_fk=3;
+
+select * from vocab where vocab_fk=?
+
+- what is tabletable for besides grouping tags? Where are instance is_a class relations?
+
+- self join into own table (cpf relation, resource relation different? Persons are things)
+
+tags are columns
+
+items are tables
+
+tables are not columns
+
+table to table is a different type of relationship
+
+item is table, adding a tag add a column to table via linking table
+
+table to table is best done with linking table
+
+must have uniform foreign key usage
+
+- things vs instances
+
+new: a thing or an instance of a thing doesn't matter. Both can be tagged. If an instance is a child of a
+known thing, then is would inherit all parent properties. However, even this is often pointless since the
+child is often quite different from the parent. Sharing some properties is interesting, and we can have
+"inherited" properties, although that is a mess and probably a very bad idea.
+
+old: table things is a table of instances, not a table of class of objects (not a table of person, but a table of
+person instances; e.g. G. Washington)
+
+- things can be instance or class, sort of, or maybe it doesn't matter.
+
+A model of a drill is a smaller group than all drills which is a subset of all electric hand tools.
+
+A named person is a single instance. A tractor with a serial number is a single instance.
+
+Any tags can be traversed, so navigating is merely the user's choice. No navigation is "better" than any other, nor is any "more" meaningful.
+
+As in when going from tool -> electric tool -> corded hand tool -> drill -> Foo Model 3 -> Drill SN 123456
+
+Shop items -> rotating tools -> less than 10 amps -> Drill SN 123456
+
+- dispatch() needs to create a message when there's no function for something that happens, but how?
+
+Can check for null or missing functions.
+
+- "new type" seems wrong, now that we can correctly add core types.
+
+- streamline how button values are tested.
+
+Could be a function that takes the button name and returns a function reference that returns true or false.
+
+- clear up the state function references.
+
+- seems like dispatch() needs work
+
+- add other tables
+
+- document the _www problem, missing suexec and fix group privs. Might be good to add _www to user twl
+
+Might be good to install suexec
+
+- fix the tests and funcs from the state table to be coderefs so we can call them from a hash, or some other
+automated method.
+
+- need an untaint() if there isn't one in sessionlib.pm already
+
+- create a github repo and push all this up there
+
+- auto fill vocab
+
+-- The tag vocabulary
+-- 
+-- length, width, height, weight, color, size, n-page, n-illustration, manufacturer, country-of-origin,
+-- material (repeatable), category (repeatable, special? Is category a vocab value or a table, below?),
+--
+-- Need a type so we can put all the vocab in this table: tag, unit, category
+--
+-- Do we need to normalize type into a separate table? No, because a unique key is (term,type).
+--
+-- unit:inch, unit:sae, unit:men's shoe, unit:cm, unit, mm, unit: ampere
+-- tag:length, tag:width
+-- category:book, category:car, category:power drill, category:corded tool
+
+date: mar 24 2016
+
+- x push to github, First create a repo on github.
+
+git remote add origin git@github.com:fusionary/remote-repo-name.git
+
+git remote add origin git@github.com:twl8n/tagging.git
+
+# ssh fingerprint
+
+ssh-keygen -l -f ~/.ssh/id_dsa
+
+git remote show origin
+git pull origin master
+git push origin master
+git push --set-upstream origin master
+
+> git remote show origin               
+* remote origin
+  Fetch URL: git@github.com:twl8n/tagging.git
+  Push  URL: git@github.com:twl8n/tagging.git
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+- x need states, button_view_item, button_edit_item, render_item_info
+
+- x need subs sql_select_item_info(),  item_info()
+
+- x create view_item.html
+
+- x dispatch debug
+
+    # 'button_tag_update' => sub { if (exists$ch{button_tag_update}) { msg("have button_tag_update<br>"); return 1 } return 0; return exists($ch{button_tag_update}); },
+
+- x add edit_tag.html and related code/states. Need to save data from edit_tag.html.
+
+- x tar -cf ~/tar_files/tagging-`date +"%F-%H%M%S"`.tar ./tagging/
+
+- x add forms for the other tables
+
+- x add a hash to dispatch() with allowed test and func references
+
+'button_vocab_add' => \&button_vocab_add,
+'button_new_type' => \&button_new_type
+
+or use the hash to call broader functions with args?
+
+'button_vocab_add' => button_check('vocab_add'),
+'button_new_type' => button_check('new_type')
+
+'button_vocab_add' => \&button_check,
+'button_new_type' => \&button_check
+
+# Call the test function with the value of the key. Presumably button_check() and any test func does something
+# systematic for each $key.
+
+&{$test_func{$key}}($key);
+
+- x vocab.type is the vocab.id of the type. core types have id 1. Tag types have id 14.
+
+(Wrong:Perhaps not. If vocab.id and vocab.type both use the same sequence then the first row has id=1 and
+  type=2. I don't see a problem with that.) type/id confusion in the sql insert statements look at
+  demo.txt. Core is probably supposed to be 1
+
+vocab.type = fk to vocab.id for the "type" of this row.
+
+core.type = core.id (singularity) = 1 (Does this make sense?)
+
+tag.type = core.id (tag is a core type) 
+length.type = tag.id (length is a tag type)
+
+Column type could be bad due to the id/type fk relationship. 
+
+- x new db
+
+rotlog tag.db
+mvt tag.db
+sqlite3 tag.db
+.read ./schema.sql
+
+- x create tar backup
+
+  * 0 * twl@Mac-User-2 __ Wed Mar 16 22:43:33 EDT 2016 __   ps:
+  Mac-User-2:/Users/twl/Sites
+> tar -cf ~/tar_files/tagging-`date +"%F-%H%M%S"`.tar ./tagging/      
+
+- x get extended vocab info
+
+select vocab.*,zz.term as type_name
+from vocab, (select term,id from vocab) as zz
+where
+vocab.type=zz.id
+
+- x add new type
+
+- x fill in add_vocab
+
