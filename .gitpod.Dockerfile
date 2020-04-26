@@ -11,4 +11,4 @@ USER gitpod
 # Install custom tools, runtime, etc.
 RUN sudo apt-get update \
     && sudo apt-get install -y clojure rlwrap \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/*
