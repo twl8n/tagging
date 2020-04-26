@@ -10,5 +10,5 @@ USER gitpod
 # More information: https://www.gitpod.io/docs/config-docker/
 # Install custom tools, runtime, etc.
 RUN sudo apt-get update \
-    && sudo apt-get install -y clojure rlwrap
+    && sudo apt-get install -y clojure rlwrap \
     && rm -rf /var/lib/apt/lists/*
