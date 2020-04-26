@@ -1,6 +1,8 @@
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/twl8n/tagging) 
+
 #### Gitpod requirements
 
-Requirements are clojure.
+Requirements are clojure. There may be other requirements.
 
 curl -O https://download.clojure.org/install/linux-install-1.10.1.536.sh
 chmod +x linux-install-1.10.1.536.sh
