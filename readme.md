@@ -1,13 +1,51 @@
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/twl8n/tagging) 
 
+#### What is tagging?
+
+Tags are a way to describe things, intentionally without using an ontology. In the simplest sense, tags are
+words, and usually nouns and adjectives: yellow, drill, cordless, hand operated. More complex are measurements
+(with units): 5 pounds, 16 inches. I have pushed the expressive complexity as far as unambiguous
+sentences-like descriptions that might be useful for reasoning about tagged entities.
+
+This tagging code is a basic software module useful for adding tag capabilities to other applications. This is
+useful to associate things with each other. Content with related content, search terms with search results.
+
+This could be monetized by using the system in commercial software. My first use will be in tagging content in
+a photo essay Content Management System, and additionally tagging reviews in a product review CMS (that
+includes the ability to create a synopsis of each review as an advertisement). Tags will allow self-hosted ads
+from the product review CMS to appear on related pages in the photo essay CMS. The product review CMS pages
+are also stand along product reviews, and are the end points of links from the ads. Monetization is driven by
+affilitate links in the product reviews.
+
+The tags would be useful in search and filtering. Imagine a well tagged cordless impact driver. Searching
+results for "drill" will generally include impact drivers since the two are interchangable. Filtering could
+include tags such as: weight, brushless motor, Li-ion battery, 20V battery, charger included, chuck size,
+dimensions, maximum speed, maximum torque, variable speed, and so on. If you search popular shopping sites you
+will see that their filters are not extensive, and that products are rarely fully qualfied.
+
+My tagging system can be used with a type-template to help find poorly tagged items. A drill type might be
+known to have tags: weight, horsepower, brushless motor, standard motor, corded, cordless, battery type, max
+speed, chuck size. It is trivial to query for items which have incomplete tag sets, allowing the product data
+entry team to concentrate on poorly described items (which we might assume have poor sales due to lack of
+information).
+
+Additionally, it seems reasonable to create a tag-cloud with UI to include/exclude or strengthen/weaken tagged
+terms, and apply the modified tag cloud as a filter.
+
+Ontologies and the semantic web have failed. Ontologies are complex, time consuming to create, and never
+complete. Tags are simple, effective, and work well. Tags as associative structures or query filters are also
+simple and effective. My system allows for a spectrum of detail allowing users to do as little or as much
+tagging as suits their need.
+
 #### Gitpod requirements
 
 Requirements are clojure. There may be other requirements.
 
+```bash
 curl -O https://download.clojure.org/install/linux-install-1.10.1.536.sh
 chmod +x linux-install-1.10.1.536.sh
 sudo ./linux-install-1.10.1.536.sh
-
+```
 
 ### Are tags sentences?
 
