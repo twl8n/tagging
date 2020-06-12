@@ -29,8 +29,8 @@ speed, chuck size. It is trivial to query for items which have incomplete tag se
 entry team to concentrate on poorly described items (which we might assume have poor sales due to lack of
 information).
 
-Additionally, it seems reasonable to create a tag-cloud with UI to include/exclude or strengthen/weaken tagged
-terms, and apply the modified tag cloud as a filter.
+My friend @Farivan realized that it would be useful to have a tag-cloud (like a word-cloud) with UI to
+include/exclude or strengthen/weaken tagged terms, and apply the modified tag cloud as a filter.
 
 Ontologies and the semantic web have failed. Ontologies are complex, time consuming to create, and never
 complete. Tags are simple, effective, and work well. Tags as associative structures or query filters are also
